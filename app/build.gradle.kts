@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -53,4 +57,5 @@ dependencies {
     implementation("com.zeugmasolutions.localehelper:locale-helper-android:1.5.1")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.github.f0ris.sweetalert:library:1.6.2")
 }
