@@ -79,8 +79,8 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.makeText(SignupActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
                                             Intent loginIntent = new Intent(SignupActivity.this, LoginActivity.class);
                                             loginIntent.putExtra("checkUser", "newUser");
-                                            startActivity(loginIntent);
                                             sweetAlertDialog.dismissWithAnimation();
+                                            startActivity(loginIntent);
 
                                             firebaseFirestore.collection("User")
                                                     .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
