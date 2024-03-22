@@ -31,6 +31,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Objects;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(binding.getRoot());
 
         sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
