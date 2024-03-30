@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivityPackage.SearchFragment">
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#363F44"
+        android:gravity="center">
+
+        <EditText
+            android:background="@drawable/bg_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="80dp"
+            android:hint="Nhập tên truyện"
+            android:textColorHint="#B3ADAD"
+            android:gravity="center"
+            android:textColor="#fff"/>
+    </RelativeLayout>
+    <GridView
+        android:id="@+id/gdvComicList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Search" />
-
-</FrameLayout>
+        android:numColumns="3"></GridView>
+</LinearLayout>

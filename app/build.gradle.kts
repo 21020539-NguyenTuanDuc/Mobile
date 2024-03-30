@@ -58,4 +58,5 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.github.f0ris.sweetalert:library:1.6.2")
+    implementation ("com.github.bumptech.glide:glide:4.10.0")
 }
