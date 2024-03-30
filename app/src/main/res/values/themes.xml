@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Mobile" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#5E3511</item>
-        <item name="colorPrimaryVariant">#5E3511</item>
+        <item name="colorPrimary">#88b4fc</item>
+        <item name="colorPrimaryVariant">#448afc</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#70332E</item>
-        <item name="colorSecondaryVariant">#6B3C13</item>
+        <item name="colorSecondary">#176efc</item>
+        <item name="colorSecondaryVariant">#004fd1</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
