@@ -40,15 +40,6 @@
             android:text='Overflow'
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginStart="5dp"
-            android:backgroundTint="#FF0000"
-            android:text="X" />
-
 
     </LinearLayout>
 
