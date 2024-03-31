@@ -1,13 +1,17 @@
 package com.example.mobile;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -16,8 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mobile.Model.MangaModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MangaDetailActivity extends AppCompatActivity {
     ImageView imgView;
@@ -82,10 +90,43 @@ public class MangaDetailActivity extends AppCompatActivity {
         });
 
         btnFav.setOnClickListener(view -> {
-            if (imgFav.getVisibility() == View.VISIBLE)
-                imgFav.setVisibility(View.INVISIBLE);
-            else
-                imgFav.setVisibility(View.VISIBLE);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.collection("User").document(userId).get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    List<String> favoriteList = (List<String>) document.get("favoriteList");
+                                    if (favoriteList == null) {
+                                        favoriteList = new ArrayList<>();
+                                    }
+
+                                    if (favoriteList.contains(manga.getId())) {
+                                        Toast.makeText(MangaDetailActivity.this, "Truyện đã có trong danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        favoriteList.add(manga.getId());
+
+                                        db.collection("User").document(userId)
+                                                .update("favoriteList", favoriteList)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(MangaDetailActivity.this, "Đã thêm vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        });
+            } else {
+                Toast.makeText(MangaDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
+            }
         });
 
 //        btnRead.setOnClickListener(view -> {
