@@ -193,7 +193,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="#29B6F6"
-            android:text="SELECT CHAP"
+            android:text="CHAPTER"
             android:textColor="#FFFFFF"
             app:cornerRadius="20dp" />
 
