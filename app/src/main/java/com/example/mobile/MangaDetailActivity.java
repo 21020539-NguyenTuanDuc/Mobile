@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MangaDetailActivity extends AppCompatActivity {
+
+    public int MAX_HISTORY_SIZE = 10;
     ImageView imgView;
     ImageView imgFav;
     TextView txtDes;
@@ -108,15 +110,71 @@ public class MangaDetailActivity extends AppCompatActivity {
                                     } else {
                                         favoriteList.add(manga.getId());
 
+                                        // Cập nhật danh sách yêu thích mới vào Firestore
                                         db.collection("User").document(userId)
                                                 .update("favoriteList", favoriteList)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Toast.makeText(MangaDetailActivity.this, "Đã thêm vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+
+                                                    // Tăng giá trị likes của truyện lên 1
+                                                    db.collection("Manga").document(manga.getId())
+                                                            .update("likes", manga.getLikes() + 1)
+                                                            .addOnSuccessListener(aVoid1 -> {
+                                                                Toast.makeText(MangaDetailActivity.this, "Đã tăng thêm 1 lượt thích cho truyện!", Toast.LENGTH_SHORT).show();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            });
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
                                     }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        });
+            } else {
+                Toast.makeText(MangaDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        btnRead.setOnClickListener(view -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.collection("User").document(userId).get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    List<String> historyList = (List<String>) document.get("historyList");
+                                    if (historyList == null) {
+                                        historyList = new ArrayList<>();
+                                    }
+
+                                    if (historyList.contains(manga.getId())) {
+                                        historyList.remove(manga.getId());
+                                    }
+
+                                    historyList.add(manga.getId());
+
+                                    if (historyList.size() > MAX_HISTORY_SIZE) {
+                                        historyList.remove(0);
+                                    }
+
+                                    db.collection("User").document(userId)
+                                            .update("historyList", historyList)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(MangaDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            });
                                 } else {
                                     Log.d(TAG, "No such document");
                                 }
