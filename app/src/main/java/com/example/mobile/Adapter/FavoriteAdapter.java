@@ -1,4 +1,4 @@
-package com.example.mobile.MainActivityPackage;
+package com.example.mobile.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,12 +16,12 @@ import com.example.mobile.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
     private List<MangaModel> mangaList;
     private Context context;
 
-    public HistoryAdapter(Context context) {
+    public FavoriteAdapter(Context context) {
         this.context = context;
         this.mangaList = new ArrayList<>();
     }

@@ -3,18 +3,37 @@ package com.example.mobile.Model;
 
 import android.content.Context;
 
+import com.google.firebase.storage.StorageReference;
+import java.util.List;
+
 public class MangaModel {
     private String id;
     private String name;
     private String image;
+    private String author;
+//    private List<StorageReference> chapList;
+    private String description;
+    private List<String> genres;
+    private int likes;
 
     public MangaModel() {
     }
 
-    public MangaModel(String id, String name, String image) {
+//    public MangaModel(String id, String name, String image) {
+//        this.id = id;
+//        this.name = name;
+//        this.image = image;
+//    }
+
+    public MangaModel(String id, String name, String image, String author, String description, List<String> genres, int likes) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.author = author;
+//        this.chapList = chapList;
+        this.description = description;
+        this.genres = genres;
+        this.likes = likes;
     }
 
     public String getId() {
@@ -39,6 +58,46 @@ public class MangaModel {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+//    public List<StorageReference> getChapList() {
+//        return chapList;
+//    }
+//
+//    public void setChapList(List<StorageReference> chapList) {
+//        this.chapList = chapList;
+//    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public int getImageResourceId(Context context) {

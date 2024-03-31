@@ -1,33 +1,28 @@
 package com.example.mobile.MainActivityPackage;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.util.Log;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.Fragment;
+import android.content.Intent;
+
+
+import com.example.mobile.Adapter.HistoryAdapter;
+import com.example.mobile.MangaDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.Model.UserModel;
 import com.example.mobile.R;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
-import java.util.ArrayList;
 
 
 public class HistoryFragment extends Fragment {
@@ -46,7 +41,7 @@ public class HistoryFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
 
         // Khởi tạo adapter và thiết lập LayoutManager
-        adapter = new HistoryAdapter(getContext());
+        adapter = new HistoryAdapter(getContext(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -84,7 +79,7 @@ public class HistoryFragment extends Fragment {
                             if (document.exists()) {
                                 MangaModel manga = document.toObject(MangaModel.class);
                                 if (manga != null) {
-                                    adapter.addManga(manga);
+                                    adapter.addManga(0, manga);
                                 }
                             }
                         } else {
@@ -93,4 +88,12 @@ public class HistoryFragment extends Fragment {
                     });
         }
     }
+    public void onItemClick(String id, String image, String name){
+        Intent i = new Intent(getContext(), MangaDetailActivity.class);
+        i.putExtra("id", id);
+        i.putExtra("image", image);
+        i.putExtra("name", name);
+        startActivity(i);
+    }
+
 }
