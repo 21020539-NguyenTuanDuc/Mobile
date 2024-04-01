@@ -1,5 +1,6 @@
 package com.example.mobile.MainActivityPackage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobile.Adapter.FavoriteAdapter;
+import com.example.mobile.FavoriteDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.Model.UserModel;
 import com.example.mobile.R;
@@ -38,7 +40,7 @@ public class FavoriteFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
 
         // Khởi tạo adapter và thiết lập LayoutManager
-        adapter = new FavoriteAdapter(getContext());
+        adapter = new FavoriteAdapter(getContext(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -84,5 +86,12 @@ public class FavoriteFragment extends Fragment {
                         }
                     });
         }
+    }
+    public void onItemClick(String id, String image, String name){
+        Intent i = new Intent(getContext(), FavoriteDetailActivity.class);
+        i.putExtra("id", id);
+        i.putExtra("image", image);
+        i.putExtra("name", name);
+        startActivity(i);
     }
 }
