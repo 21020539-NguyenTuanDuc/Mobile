@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobile.Adapter.FavoriteAdapter;
-import com.example.mobile.FavoriteDetailActivity;
+import com.example.mobile.MangaDetailPackage.FavoriteDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.Model.UserModel;
 import com.example.mobile.R;

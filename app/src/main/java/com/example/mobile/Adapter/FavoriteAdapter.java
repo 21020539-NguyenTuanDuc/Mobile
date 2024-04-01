@@ -12,8 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.MainActivityPackage.FavoriteFragment;
-import com.example.mobile.FavoriteDetailActivity;
-import com.example.mobile.MangaDetailActivity;
+import com.example.mobile.MangaDetailPackage.FavoriteDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 

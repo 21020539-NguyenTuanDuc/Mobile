@@ -1,9 +1,8 @@
-package com.example.mobile;
+package com.example.mobile.MangaDetailPackage;
 
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobile.MainActivity;
 import com.example.mobile.Model.MangaModel;
+import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,8 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MangaDetailActivity extends AppCompatActivity {
-
+public class FavoriteDetailActivity extends AppCompatActivity {
     public int MAX_HISTORY_SIZE = 10;
     ImageView imgView;
     ImageView imgFav;
@@ -53,7 +53,7 @@ public class MangaDetailActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        setContentView(R.layout.activity_manga_detail);
+        setContentView(R.layout.activity_favorite_detail);
 
         db = FirebaseFirestore.getInstance();
 
@@ -87,7 +87,7 @@ public class MangaDetailActivity extends AppCompatActivity {
 
         btnPrev = findViewById(R.id.btnPrev);
         btnPrev.setOnClickListener(view -> {
-            Intent intent = new Intent(MangaDetailActivity.this, MainActivity.class);
+            Intent intent = new Intent(FavoriteDetailActivity.this, MainActivity.class);
             startActivity(intent);
         });
 
@@ -106,29 +106,29 @@ public class MangaDetailActivity extends AppCompatActivity {
                                     }
 
                                     if (favoriteList.contains(manga.getId())) {
-                                        Toast.makeText(MangaDetailActivity.this, "Truyện đã có trong danh sách yêu thích!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        favoriteList.add(manga.getId());
+                                        // Xóa truyện khỏi danh sách yêu thích
+                                        favoriteList.remove(manga.getId());
 
                                         // Cập nhật danh sách yêu thích mới vào Firestore
                                         db.collection("User").document(userId)
                                                 .update("favoriteList", favoriteList)
                                                 .addOnSuccessListener(aVoid -> {
-                                                    Toast.makeText(MangaDetailActivity.this, "Đã thêm vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
-
-                                                    // Tăng giá trị likes của truyện lên 1
+                                                    Toast.makeText(FavoriteDetailActivity.this, "Đã xóa khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                                                    // Giảm 1 giá trị likes của truyện
                                                     db.collection("Manga").document(manga.getId())
-                                                            .update("likes", manga.getLikes() + 1)
+                                                            .update("likes", manga.getLikes() - 1)
                                                             .addOnSuccessListener(aVoid1 -> {
-                                                                Toast.makeText(MangaDetailActivity.this, "Đã tăng thêm 1 lượt thích cho truyện!", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(FavoriteDetailActivity.this, "Đã giảm đi 1 lượt thích cho truyện!", Toast.LENGTH_SHORT).show();
                                                             })
                                                             .addOnFailureListener(e -> {
-                                                                Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                             });
                                                 })
                                                 .addOnFailureListener(e -> {
-                                                    Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
+                                    } else {
+                                        Toast.makeText(FavoriteDetailActivity.this, "Bạn đã xóa truyện khỏi danh sách yêu thích trước đó rồi!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.d(TAG, "No such document");
@@ -138,10 +138,9 @@ public class MangaDetailActivity extends AppCompatActivity {
                             }
                         });
             } else {
-                Toast.makeText(MangaDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoriteDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         btnRead.setOnClickListener(view -> {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -170,10 +169,38 @@ public class MangaDetailActivity extends AppCompatActivity {
                                     db.collection("User").document(userId)
                                             .update("historyList", historyList)
                                             .addOnSuccessListener(aVoid -> {
-                                                Toast.makeText(MangaDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FavoriteDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+
+                                                // Truy vấn chapList từ Firestore
+                                                db.collection("Manga").document(manga.getId())
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            if (documentSnapshot.exists()) {
+                                                                // Kiểm tra kiểu dữ liệu của chapList
+                                                                Object chapListObject = documentSnapshot.get("chapList");
+                                                                if (chapListObject instanceof List<?>) {
+                                                                    // Ép kiểu chapListObject thành List<String>
+                                                                    List<String> chapList = (List<String>) chapListObject;
+
+                                                                    // Chuyển sang MangaReaderActivity và gửi chapList qua intent
+                                                                    Intent intent = new Intent(FavoriteDetailActivity.this, MangaReaderActivity.class);
+                                                                    intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
+                                                                    startActivity(intent);
+                                                                } else {
+                                                                    // Xử lý trường hợp dữ liệu không hợp lệ
+                                                                    Toast.makeText(FavoriteDetailActivity.this, "Dữ liệu chapList không hợp lệ", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(FavoriteDetailActivity.this, "Không tìm thấy manga", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        });
+
                                             })
                                             .addOnFailureListener(e -> {
-                                                Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             });
                                 } else {
                                     Log.d(TAG, "No such document");
@@ -183,12 +210,57 @@ public class MangaDetailActivity extends AppCompatActivity {
                             }
                         });
             } else {
-                Toast.makeText(MangaDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoriteDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
             }
         });
 
+
 //        btnRead.setOnClickListener(view -> {
-//            Intent i = new Intent(MangaDetailActivity.this, MangaReader.class);
+//            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//                db.collection("User").document(userId).get()
+//                        .addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                DocumentSnapshot document = task.getResult();
+//                                if (document.exists()) {
+//                                    List<String> historyList = (List<String>) document.get("historyList");
+//                                    if (historyList == null) {
+//                                        historyList = new ArrayList<>();
+//                                    }
+//
+//                                    if (historyList.contains(manga.getId())) {
+//                                        historyList.remove(manga.getId());
+//                                    }
+//
+//                                    historyList.add(manga.getId());
+//
+//                                    if (historyList.size() > MAX_HISTORY_SIZE) {
+//                                        historyList.remove(0);
+//                                    }
+//
+//                                    db.collection("User").document(userId)
+//                                            .update("historyList", historyList)
+//                                            .addOnSuccessListener(aVoid -> {
+//                                                Toast.makeText(FavoriteDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+//                                            })
+//                                            .addOnFailureListener(e -> {
+//                                                Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                            });
+//                                } else {
+//                                    Log.d(TAG, "No such document");
+//                                }
+//                            } else {
+//                                Log.d(TAG, "get failed with ", task.getException());
+//                            }
+//                        });
+//            } else {
+//                Toast.makeText(FavoriteDetailActivity.this, "Bạn cần đăng nhập để thực hiện thao tác này!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+//        btnRead.setOnClickListener(view -> {
+//            Intent i = new Intent(FavoriteDetailActivity.this, MangaReader.class);
 //            i.putExtra("img", manga.getImageResourceId());
 //            startActivity(i);
 //        });
@@ -207,3 +279,4 @@ public class MangaDetailActivity extends AppCompatActivity {
         }
     }
 }
+

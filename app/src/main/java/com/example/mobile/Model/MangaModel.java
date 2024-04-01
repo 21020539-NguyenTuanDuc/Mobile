@@ -4,6 +4,7 @@ package com.example.mobile.Model;
 import android.content.Context;
 
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.DocumentReference;
 import java.util.List;
 
 public class MangaModel {
@@ -11,7 +12,7 @@ public class MangaModel {
     private String name;
     private String image;
     private String author;
-//    private List<StorageReference> chapList;
+    private List<String> chapList;
     private String description;
     private List<String> genres;
     private int likes;
@@ -25,12 +26,22 @@ public class MangaModel {
 //        this.image = image;
 //    }
 
-    public MangaModel(String id, String name, String image, String author, String description, List<String> genres, int likes) {
+//    public MangaModel(String id, String name, String image, String author, String description, List<String> genres, int likes) {
+//        this.id = id;
+//        this.name = name;
+//        this.image = image;
+//        this.author = author;
+////        this.chapList = chapList;
+//        this.description = description;
+//        this.genres = genres;
+//        this.likes = likes;
+//    }
+    public MangaModel(String id, String name, String image, String author, String description, List<String> chapList, List<String> genres, int likes) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.author = author;
-//        this.chapList = chapList;
+        this.chapList = chapList;
         this.description = description;
         this.genres = genres;
         this.likes = likes;
@@ -75,6 +86,13 @@ public class MangaModel {
 //    public void setChapList(List<StorageReference> chapList) {
 //        this.chapList = chapList;
 //    }
+    public List<String> getChapList() {
+        return chapList;
+    }
+
+    public void setChapList(List<String> chapList) {
+        this.chapList = chapList;
+    }
 
     public String getDescription() {
         return description;

@@ -13,7 +13,7 @@ import android.content.Intent;
 
 
 import com.example.mobile.Adapter.HistoryAdapter;
-import com.example.mobile.MangaDetailActivity;
+import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.Model.UserModel;
 import com.example.mobile.R;

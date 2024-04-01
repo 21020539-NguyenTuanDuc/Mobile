@@ -41,10 +41,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MangaDetailActivity"
+            android:name=".MangaDetailPackage.MangaDetailActivity"
             android:exported="true" />
         <activity
-            android:name=".FavoriteDetailActivity"
+            android:name=".MangaDetailPackage.FavoriteDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MangaDetailPackage.MangaReaderActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
