@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.MainActivityPackage.HistoryFragment;
-import com.example.mobile.MangaDetailActivity;
+import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 

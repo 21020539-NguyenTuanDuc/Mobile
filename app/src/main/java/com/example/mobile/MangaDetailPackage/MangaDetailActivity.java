@@ -1,11 +1,11 @@
-package com.example.mobile;
+package com.example.mobile.MangaDetailPackage;
 
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,13 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobile.MainActivity;
 import com.example.mobile.Model.MangaModel;
+import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +41,7 @@ public class MangaDetailActivity extends AppCompatActivity {
     TextView txtAuth;
     TextView txtProgress;
     TextView txtChap;
+    TextView txtGenres;
     TextView txtLike;
     TextView txtTitle;
     Button btnPrev;
@@ -66,6 +72,9 @@ public class MangaDetailActivity extends AppCompatActivity {
         imgFav = findViewById(R.id.imageFav);
         btnFav = findViewById(R.id.btnFav);
         btnRead = findViewById(R.id.btnRead);
+        txtChap = findViewById(R.id.txtChap);
+        txtGenres = findViewById(R.id.txtGenres);
+
         imgFav.bringToFront();
 
         String id = getIntent().getStringExtra("id");
@@ -171,6 +180,34 @@ public class MangaDetailActivity extends AppCompatActivity {
                                             .update("historyList", historyList)
                                             .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(MangaDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+
+                                                // Truy vấn chapList từ Firestore
+                                                db.collection("Manga").document(manga.getId())
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            if (documentSnapshot.exists()) {
+                                                                // Kiểm tra kiểu dữ liệu của chapList
+                                                                Object chapListObject = documentSnapshot.get("chapList");
+                                                                if (chapListObject instanceof List<?>) {
+                                                                    // Ép kiểu chapListObject thành List<String>
+                                                                    List<String> chapList = (List<String>) chapListObject;
+
+                                                                    // Chuyển sang MangaReaderActivity và gửi chapList qua intent
+                                                                    Intent intent = new Intent(MangaDetailActivity.this, MangaReaderActivity.class);
+                                                                    intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
+                                                                    startActivity(intent);
+                                                                } else {
+                                                                    // Xử lý trường hợp dữ liệu không hợp lệ
+                                                                    Toast.makeText(MangaDetailActivity.this, "Dữ liệu chapList không hợp lệ", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(MangaDetailActivity.this, "Không tìm thấy manga", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        });
+
                                             })
                                             .addOnFailureListener(e -> {
                                                 Toast.makeText(MangaDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -187,6 +224,7 @@ public class MangaDetailActivity extends AppCompatActivity {
             }
         });
 
+
 //        btnRead.setOnClickListener(view -> {
 //            Intent i = new Intent(MangaDetailActivity.this, MangaReader.class);
 //            i.putExtra("img", manga.getImageResourceId());
@@ -196,14 +234,26 @@ public class MangaDetailActivity extends AppCompatActivity {
 
     private void updateUI() {
         if (manga != null) {
+            int numberOfChaps = manga.getChapList().size();
+            String numberOfChapsString = String.valueOf(numberOfChaps);
+            String totalChaps = manga.getChapTotal();
+            String displayChaps = String.format("%s/%s", numberOfChapsString, totalChaps);
+            txtChap.setText(displayChaps);
+
             txtAuth.setText(manga.getAuthor());
+
             txtLike.setText(String.valueOf(manga.getLikes()));
+
 //            txtProgress.setText(manga.getProgress());
             txtTitle.setText(manga.getName());
 //            imgView.setImageResource(manga.getImageResourceId());
-//            txtChap.setText(manga.getGenres().size());
             txtDes.setText(manga.getDescription());
+
             imgView.setImageResource(manga.getImageResourceId(this));
+
+            List<String> genresList = manga.getGenres();
+            String genresText = TextUtils.join(", ", genresList);
+            txtGenres.setText(genresText);
         }
     }
 }
