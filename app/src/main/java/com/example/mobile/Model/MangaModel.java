@@ -19,6 +19,7 @@ public class MangaModel implements Serializable {
     private String description;
     private List<String> genres;
     private int likes;
+    private int currentChap;
 
     public MangaModel() {
     }
@@ -127,6 +128,13 @@ public class MangaModel implements Serializable {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+    public int getCurrentChap() {
+        return currentChap;
+    }
+
+    public void setCurrentChap(int currentChap) {
+        this.currentChap = currentChap;
     }
 
     public int getImageResourceId(Context context) {

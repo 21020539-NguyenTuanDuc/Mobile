@@ -195,6 +195,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                                                                     // Chuyển sang MangaReaderActivity và gửi chapList qua intent
                                                                     Intent intent = new Intent(FavoriteDetailActivity.this, MangaReaderActivity.class);
                                                                     intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
+                                                                    intent.putExtra("currentChap", manga.getCurrentChap());
                                                                     intent.putExtra("manga", manga);
                                                                     startActivity(intent);
                                                                 } else {

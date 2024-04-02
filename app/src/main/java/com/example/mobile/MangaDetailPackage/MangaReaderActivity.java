@@ -3,6 +3,7 @@ package com.example.mobile.MangaDetailPackage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MangaReaderActivity extends AppCompatActivity {
-
+    FirebaseFirestore db;
     FirebaseStorage storage;
     private ImageButton imageButton;
     private ScrollView scrollView;
@@ -32,15 +33,17 @@ public class MangaReaderActivity extends AppCompatActivity {
     private Button b1, b2, b3;
     MangaModel manga;
     private List<String> chapList = new ArrayList<>();
-    private int currentChapterIndex = 0; // Index of the current chapter in chapList
+    private int currentChapterIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_reader);
 
         storage = FirebaseStorage.getInstance();
         manga = (MangaModel) getIntent().getSerializableExtra("manga");
+
         // Init views
         scrollView = findViewById(R.id.scrollView3);
         imageManga = findViewById(R.id.imageManga);
@@ -53,17 +56,32 @@ public class MangaReaderActivity extends AppCompatActivity {
             chapList = (List<String>) getIntent().getSerializableExtra("chapList");
         }
 
+        int currentChap = getIntent().getIntExtra("currentChap", 0) - 1;
+
+        currentChapterIndex = currentChap;
         loadChapterImage(currentChapterIndex);
 
         b1.setOnClickListener(v -> {
             if (currentChapterIndex > 0) {
+                db.collection("Manga").document(manga.getId())
+                        .update("currentChap", currentChapterIndex)
+                        .addOnSuccessListener(aVoid -> {
+                        })
+                        .addOnFailureListener(e -> {
+                        });
                 currentChapterIndex--;
                 loadChapterImage(currentChapterIndex);
             }
         });
 
         b3.setOnClickListener(v -> {
-            if (currentChapterIndex < chapList.size() - 1) {
+            if (currentChapterIndex < chapList.size()-1) {
+                db.collection("Manga").document(manga.getId())
+                        .update("currentChap", currentChapterIndex + 2)
+                        .addOnSuccessListener(aVoid -> {
+                        })
+                        .addOnFailureListener(e -> {
+                        });
                 currentChapterIndex++;
                 loadChapterImage(currentChapterIndex);
             }
