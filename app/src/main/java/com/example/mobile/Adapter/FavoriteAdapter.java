@@ -11,16 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mobile.MainActivityPackage.FavoriteFragment;
 import com.example.mobile.MangaDetailPackage.FavoriteDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
-
+    FirebaseStorage storage;
     private List<MangaModel> mangaList;
     private Context context;
     private FavoriteFragment fragment;
@@ -29,6 +32,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         this.context = context;
         this.mangaList = new ArrayList<>();
         this.fragment = fragment;
+        storage = FirebaseStorage.getInstance();
     }
 
     public void addManga(MangaModel manga) {
@@ -108,7 +112,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         }
 
         public void bind(MangaModel manga) {
-            ivManga.setImageResource(manga.getImageResourceId(context));
+            String imageName = manga.getImage();
+
+            StorageReference imageRef = storage.getReference().child("images/" + imageName);
+
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(ivManga.getContext())
+                        .load(uri)
+                        .into(ivManga);
+            }).addOnFailureListener(exception -> {
+                // Xử lý khi load ảnh thất bại
+            });
             tvName.setText(manga.getName());
         }
 

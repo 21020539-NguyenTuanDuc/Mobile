@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.mobile.MainActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
@@ -27,13 +28,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MangaDetailActivity extends AppCompatActivity {
-
+    FirebaseStorage storage;
     public int MAX_HISTORY_SIZE = 10;
     ImageView imgView;
     ImageView imgFav;
@@ -53,6 +56,7 @@ public class MangaDetailActivity extends AppCompatActivity {
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        storage = FirebaseStorage.getInstance();
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -251,7 +255,17 @@ public class MangaDetailActivity extends AppCompatActivity {
 //            imgView.setImageResource(manga.getImageResourceId());
             txtDes.setText(manga.getDescription());
 
-            imgView.setImageResource(manga.getImageResourceId(this));
+            String imageName = manga.getImage();
+
+            StorageReference imageRef = storage.getReference().child("images/" + imageName);
+
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(imgView.getContext())
+                        .load(uri)
+                        .into(imgView);
+            }).addOnFailureListener(exception -> {
+                // Xử lý khi load ảnh thất bại
+            });
 
             List<String> genresList = manga.getGenres();
             String genresText = TextUtils.join(", ", genresList);
