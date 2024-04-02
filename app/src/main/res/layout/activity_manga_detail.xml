@@ -206,7 +206,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnPrev"
+            android:id="@+id/btnChap"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="49dp"
             android:layout_height="wrap_content"

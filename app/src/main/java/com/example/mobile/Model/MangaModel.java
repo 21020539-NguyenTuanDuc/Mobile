@@ -5,9 +5,11 @@ import android.content.Context;
 
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.DocumentReference;
+import java.io.Serializable;
+
 import java.util.List;
 
-public class MangaModel {
+public class MangaModel implements Serializable {
     private String id;
     private String name;
     private String image;

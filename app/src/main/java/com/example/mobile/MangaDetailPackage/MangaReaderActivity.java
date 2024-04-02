@@ -1,6 +1,7 @@
 package com.example.mobile.MangaDetailPackage;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +30,7 @@ public class MangaReaderActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private ImageView imageManga;
     private Button b1, b2, b3;
+    MangaModel manga;
     private List<String> chapList = new ArrayList<>();
     private int currentChapterIndex = 0; // Index of the current chapter in chapList
 
@@ -37,6 +40,7 @@ public class MangaReaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manga_reader);
 
         storage = FirebaseStorage.getInstance();
+        manga = (MangaModel) getIntent().getSerializableExtra("manga");
         // Init views
         scrollView = findViewById(R.id.scrollView3);
         imageManga = findViewById(R.id.imageManga);
@@ -64,7 +68,11 @@ public class MangaReaderActivity extends AppCompatActivity {
                 loadChapterImage(currentChapterIndex);
             }
         });
-        // Other function
+        b2.setOnClickListener(view -> {
+            Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+            intent.putExtra("manga", manga);
+            startActivity(intent);
+        });
     }
 
     private void loadChapterImage(int index) {

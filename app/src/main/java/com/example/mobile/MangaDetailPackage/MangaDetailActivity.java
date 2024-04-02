@@ -44,7 +44,7 @@ public class MangaDetailActivity extends AppCompatActivity {
     TextView txtGenres;
     TextView txtLike;
     TextView txtTitle;
-    Button btnPrev;
+    Button btnChap;
     Button btnFav;
     Button btnRead;
     FirebaseFirestore db;
@@ -72,6 +72,7 @@ public class MangaDetailActivity extends AppCompatActivity {
         imgFav = findViewById(R.id.imageFav);
         btnFav = findViewById(R.id.btnFav);
         btnRead = findViewById(R.id.btnRead);
+        btnChap = findViewById(R.id.btnChap);
         txtChap = findViewById(R.id.txtChap);
         txtGenres = findViewById(R.id.txtGenres);
 
@@ -94,9 +95,9 @@ public class MangaDetailActivity extends AppCompatActivity {
                     }
                 });
 
-        btnPrev = findViewById(R.id.btnPrev);
-        btnPrev.setOnClickListener(view -> {
-            Intent intent = new Intent(MangaDetailActivity.this, MainActivity.class);
+        btnChap.setOnClickListener(view -> {
+            Intent intent = new Intent(MangaDetailActivity.this, ChapterActivity.class);
+            intent.putExtra("manga", manga);
             startActivity(intent);
         });
 
@@ -195,6 +196,7 @@ public class MangaDetailActivity extends AppCompatActivity {
                                                                     // Chuyển sang MangaReaderActivity và gửi chapList qua intent
                                                                     Intent intent = new Intent(MangaDetailActivity.this, MangaReaderActivity.class);
                                                                     intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
+                                                                    intent.putExtra("manga", manga);
                                                                     startActivity(intent);
                                                                 } else {
                                                                     // Xử lý trường hợp dữ liệu không hợp lệ

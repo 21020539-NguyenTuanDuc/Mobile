@@ -50,6 +50,9 @@
             android:name=".MangaDetailPackage.MangaReaderActivity"
             android:exported="true" />
         <activity
+            android:name=".MangaDetailPackage.ChapterActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true" />
     </application>
