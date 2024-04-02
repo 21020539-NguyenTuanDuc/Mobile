@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +41,7 @@ public class MangaDetailActivity extends AppCompatActivity {
     TextView txtAuth;
     TextView txtProgress;
     TextView txtChap;
+    TextView txtGenres;
     TextView txtLike;
     TextView txtTitle;
     Button btnPrev;
@@ -70,6 +72,9 @@ public class MangaDetailActivity extends AppCompatActivity {
         imgFav = findViewById(R.id.imageFav);
         btnFav = findViewById(R.id.btnFav);
         btnRead = findViewById(R.id.btnRead);
+        txtChap = findViewById(R.id.txtChap);
+        txtGenres = findViewById(R.id.txtGenres);
+
         imgFav.bringToFront();
 
         String id = getIntent().getStringExtra("id");
@@ -229,14 +234,26 @@ public class MangaDetailActivity extends AppCompatActivity {
 
     private void updateUI() {
         if (manga != null) {
+            int numberOfChaps = manga.getChapList().size();
+            String numberOfChapsString = String.valueOf(numberOfChaps);
+            String totalChaps = manga.getChapTotal();
+            String displayChaps = String.format("%s/%s", numberOfChapsString, totalChaps);
+            txtChap.setText(displayChaps);
+
             txtAuth.setText(manga.getAuthor());
+
             txtLike.setText(String.valueOf(manga.getLikes()));
+
 //            txtProgress.setText(manga.getProgress());
             txtTitle.setText(manga.getName());
 //            imgView.setImageResource(manga.getImageResourceId());
-//            txtChap.setText(manga.getGenres().size());
             txtDes.setText(manga.getDescription());
+
             imgView.setImageResource(manga.getImageResourceId(this));
+
+            List<String> genresList = manga.getGenres();
+            String genresText = TextUtils.join(", ", genresList);
+            txtGenres.setText(genresText);
         }
     }
 }

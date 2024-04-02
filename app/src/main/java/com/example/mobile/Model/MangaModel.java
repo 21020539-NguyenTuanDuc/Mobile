@@ -13,6 +13,7 @@ public class MangaModel {
     private String image;
     private String author;
     private List<String> chapList;
+    private String chapTotal;
     private String description;
     private List<String> genres;
     private int likes;
@@ -92,6 +93,14 @@ public class MangaModel {
 
     public void setChapList(List<String> chapList) {
         this.chapList = chapList;
+    }
+
+    public String getChapTotal() {
+        return chapTotal;
+    }
+
+    public void setChapTotal(String chapTotal) {
+        this.chapTotal = chapTotal;
     }
 
     public String getDescription() {
