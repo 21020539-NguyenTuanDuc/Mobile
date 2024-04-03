@@ -71,6 +71,7 @@ public class MangaReaderActivity extends AppCompatActivity {
                         });
                 currentChapterIndex--;
                 loadChapterImage(currentChapterIndex);
+                b2.setText("Chap " + (currentChapterIndex + 1));
             }
         });
 
@@ -84,6 +85,7 @@ public class MangaReaderActivity extends AppCompatActivity {
                         });
                 currentChapterIndex++;
                 loadChapterImage(currentChapterIndex);
+                b2.setText("Chap " + (currentChapterIndex + 1));
             }
         });
         b2.setOnClickListener(view -> {
@@ -91,6 +93,8 @@ public class MangaReaderActivity extends AppCompatActivity {
             intent.putExtra("manga", manga);
             startActivity(intent);
         });
+
+        b2.setText("Chap " + (currentChapterIndex + 1));
     }
 
     private void loadChapterImage(int index) {
