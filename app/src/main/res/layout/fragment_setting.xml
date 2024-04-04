@@ -31,57 +31,43 @@
                 android:drawablePadding="5dp"
                 android:layout_marginTop="30dp"/>
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:paddingHorizontal="30dp"-->
-<!--                android:layout_marginTop="10dp">-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="30dp"
+                android:layout_marginTop="10dp">
 
-<!--                <TextView-->
-<!--                    android:id="@+id/booked_ticket_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="bottom"-->
-<!--                    android:text="@string/booked_tickets"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:paddingVertical="5dp"-->
-<!--                    android:paddingHorizontal="10dp"-->
-<!--                    android:textColor="@drawable/text_color"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:drawablePadding="5dp"-->
-<!--                    android:drawableTop="@drawable/ticket"/>-->
+                <TextView
+                    android:id="@+id/subscription_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="New subscription"
+                    android:textSize="16sp"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="10dp"
+                    android:textColor="@drawable/text_color"
+                    android:textStyle="bold"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/vip_icon"/>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/exchanged_gift_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_centerHorizontal="true"-->
-<!--                    android:drawableTop="@drawable/gift"-->
-<!--                    android:drawablePadding="5dp"-->
-<!--                    android:textColor="@drawable/text_color"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:gravity="bottom"-->
-<!--                    android:paddingHorizontal="10dp"-->
-<!--                    android:paddingVertical="5dp"-->
-<!--                    android:text="@string/exchanged_gifts"-->
-<!--                    android:textSize="16sp" />-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/voucher_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="bottom|center"-->
-<!--                    android:text="@string/priority_tickets"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:paddingVertical="5dp"-->
-<!--                    android:textColor="@drawable/text_color"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:paddingHorizontal="10dp"-->
-<!--                    android:layout_alignParentRight="true"-->
-<!--                    android:drawablePadding="5dp"-->
-<!--                    android:drawableTop="@drawable/people_voucher"/>-->
+                <TextView
+                    android:id="@+id/voucher_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|center"
+                    android:text="Buy more coin"
+                    android:textSize="16sp"
+                    android:paddingVertical="5dp"
+                    android:textColor="@drawable/text_color"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="10dp"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/coin"/>
 
-<!--            </RelativeLayout>-->
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

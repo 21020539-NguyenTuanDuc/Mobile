@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,34 +126,38 @@ public class SettingFragment extends Fragment {
 
         binding.navHeader.username.setText(MainActivity.currentUser.getName());
         binding.navHeader.email.setText(MainActivity.currentUser.getEmail());
-//        if (MainActivity.currentUser.getVipExpiredTimestamp() > System.currentTimeMillis()) {
-//        }
-//        ObjectAnimator animator = ObjectAnimator.ofInt(binding.navHeader.username, "backgroundColor", Color.BLUE, Color.RED, Color.GREEN);
-//
-//        // duration of one color
-//        animator.setDuration(500);
-//        animator.setEvaluator(new ArgbEvaluator());
-//
-//        // color will be show in reverse manner
-//        animator.setRepeatCount(Animation.REVERSE);
-//
-//        // It will be repeated up to infinite time
-//        animator.setRepeatCount(Animation.INFINITE);
-//        animator.start();
 
-        Handler handler = new Handler();
-        int[] colors = {Color.BLUE, Color.WHITE, Color.YELLOW, Color.GREEN};
-        final int[] i = new int[1];
-        Runnable runnable = new Runnable () {
-            @Override
-            public void run() {
-                i[0] = i[0] % colors.length;
-                binding.navHeader.username.setTextColor(colors[i[0]]);
-                i[0]++;
-                handler.postDelayed(this, 1000);
-            }
-        };
-        handler.postDelayed(runnable, 1000);
+        if(MainActivity.currentUser.getVipExpiredTimestamp() > System.currentTimeMillis() / 1000) {
+            Handler handler = new Handler();
+            int[] colors = {Color.BLUE, Color.WHITE, Color.YELLOW, Color.GREEN};
+            final int[] i = new int[1];
+            Runnable runnable = new Runnable () {
+                @Override
+                public void run() {
+                    i[0] = i[0] % colors.length;
+                    binding.navHeader.username.setTextColor(colors[i[0]]);
+                    binding.navHeader.tierBadge.setTextColor(colors[i[0]]);
+                    i[0]++;
+                    handler.postDelayed(this, 200);
+                }
+            };
+            handler.postDelayed(runnable, 200);
+
+            binding.navHeader.tierBadge.setText("Status: VIP");
+            binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_vip));
+            binding.subscriptionTv.setText("Extend subscription");
+        } else {
+            binding.navHeader.tierBadge.setText("Status: Standard");
+            binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_standard));
+            binding.subscriptionTv.setText("New subscription");
+        }
+
+        String prefix0 = "\uD83E\uDE99 Coin: ";
+        String amount0 = String.valueOf(MainActivity.currentUser.getCoin());
+        Spannable wordToSpan = new SpannableString(prefix0 + amount0);
+        wordToSpan.setSpan(new ForegroundColorSpan(Color.YELLOW), prefix0.length(), wordToSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        binding.navHeader.coin.setText(wordToSpan);
+
 
         binding.navHeader.editInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
