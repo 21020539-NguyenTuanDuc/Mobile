@@ -35,11 +35,14 @@ import com.example.mobile.Model.UserModel;
 //import com.example.ui.Quiz.GiftActivity;
 import com.example.mobile.R;
 //import com.example.ui.SettingPackage.CheckPriorityActivity;
+import com.example.mobile.SettingPackage.BuyingCoinActivity;
 import com.example.mobile.SettingPackage.EditInfoActivity;
 import com.example.mobile.SettingPackage.InstructionActivity;
 import com.example.mobile.SettingPackage.LanguageActivity;
 import com.example.mobile.SettingPackage.PrivacyActivity;
 //import com.example.ui.TicketHandler.BoughtTicketActivity;
+import com.example.mobile.SettingPackage.SubscriptionActivity;
+import com.example.mobile.databinding.ActivityBuyingCoinBinding;
 import com.example.mobile.databinding.FragmentSettingBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -169,6 +172,32 @@ public class SettingFragment extends Fragment {
                     }
                 });
                 startActivity(new Intent(getActivity(), EditInfoActivity.class));
+            }
+        });
+
+        binding.subscriptionTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.subscriptionTv.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.subscriptionTv.animate().scaleX(1f).scaleY(1f).setDuration(100);
+                    }
+                });
+                startActivity(new Intent(getActivity(), SubscriptionActivity.class));
+            }
+        });
+
+        binding.coinTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.coinTv.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.coinTv.animate().scaleX(1f).scaleY(1f).setDuration(100);
+                    }
+                });
+                startActivity(new Intent(getActivity(), BuyingCoinActivity.class));
             }
         });
 

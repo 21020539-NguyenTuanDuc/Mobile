@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,25 @@
         android:roundIcon="@drawable/dragon_ball_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".SettingPackage.SuccessPaymentActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SettingPackage.BuyingSubActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SettingPackage.BuyingCoinActivity"
             android:exported="false" />
@@ -39,7 +57,7 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/splashscreenTheme">
+            android:theme="@style/splashscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
