@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,12 +22,27 @@ import java.util.List;
 public class ComicAdapter extends ArrayAdapter<Comic> {
     private Context ct;
     private ArrayList<Comic> arr;
+
     public ComicAdapter(Context context, int resource, List<Comic> objects) {
         super(context, resource, objects);
         this.ct = context;
         this.arr = new ArrayList<>(objects);
     }
 
+    public void sortComicByName(String s) {
+        s = s.toUpperCase();
+        int k = 0;
+        for (int i =0; i < arr.size(); i++) {
+            Comic t = arr.get(i);
+            String name = t.getName().toUpperCase();
+            if (name.indexOf(s) >= 0) {
+                arr.set(i, arr.get(k));
+                arr.set(k, t);
+                k++;
+            }
+            notifyDataSetChanged();
+        }
+    }
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null){
@@ -40,7 +56,7 @@ public class ComicAdapter extends ArrayAdapter<Comic> {
             TextView chapter_name = convertView.findViewById(R.id.chapter_name);
             ImageView image_comic = convertView.findViewById(R.id.img_comic);
 
-            name_comic.setText(comic.getName());
+            name_comic.setText(comic.getShortName());
             chapter_name.setText(comic.getChapter());
             Glide.with(this.ct).load(comic.getImageURL()).into(image_comic);
         }
