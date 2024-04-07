@@ -31,7 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background"
         tools:ignore="ImageContrastCheck" />
 
     <TextView
@@ -206,7 +205,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnPrev"
+            android:id="@+id/btnChap"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="49dp"
             android:layout_height="wrap_content"

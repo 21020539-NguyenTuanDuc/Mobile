@@ -5,9 +5,11 @@ import android.content.Context;
 
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.DocumentReference;
+import java.io.Serializable;
+
 import java.util.List;
 
-public class MangaModel {
+public class MangaModel implements Serializable {
     private String id;
     private String name;
     private String image;
@@ -17,6 +19,7 @@ public class MangaModel {
     private String description;
     private List<String> genres;
     private int likes;
+    private int currentChap;
 
     public MangaModel() {
     }
@@ -125,6 +128,13 @@ public class MangaModel {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+    public int getCurrentChap() {
+        return currentChap;
+    }
+
+    public void setCurrentChap(int currentChap) {
+        this.currentChap = currentChap;
     }
 
     public int getImageResourceId(Context context) {
