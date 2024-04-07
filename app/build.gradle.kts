@@ -43,6 +43,10 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(fileTree(mapOf("dir" to "D:\\AndroidRes\\zalopay", "include" to listOf("*.aar", "*.jar"))))
+    implementation(fileTree(mapOf(
+        "dir" to "E:\\Test\\AndroidRes",
+        "include" to listOf("*.aar", "*.jar")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
