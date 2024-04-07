@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(files("C:\\Users\\vuthitho\\Documents\\zpdk-release-v3.1.aar"))
+    implementation(fileTree(mapOf("dir" to "D:\\AndroidRes\\zalopay", "include" to listOf("*.aar", "*.jar"))))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -61,4 +62,9 @@ dependencies {
     implementation ("com.github.f0ris.sweetalert:library:1.6.2")
     implementation ("com.github.bumptech.glide:glide:4.10.0")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //    zalo
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.15")
+//    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
 }

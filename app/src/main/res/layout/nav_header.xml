@@ -4,12 +4,12 @@
     android:id="@+id/nav_header"
     app:cardCornerRadius="0dp"
     android:layout_width="match_parent"
-    android:layout_height="300dp">
+    android:layout_height="360dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/brown_gradient"
+        android:background="@drawable/blue_gradient"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -61,6 +61,28 @@
                 android:textColor="@color/white"
                 android:text="1@gmail.com"
                 android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/coin"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:text="🪙Coin: 1000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tier_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Status: Standard"
+                android:background="@drawable/custom_button_standard"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/edit_info_button"

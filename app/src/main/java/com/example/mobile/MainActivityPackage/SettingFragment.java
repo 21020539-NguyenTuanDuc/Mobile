@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +35,14 @@ import com.example.mobile.Model.UserModel;
 //import com.example.ui.Quiz.GiftActivity;
 import com.example.mobile.R;
 //import com.example.ui.SettingPackage.CheckPriorityActivity;
+import com.example.mobile.SettingPackage.BuyingCoinActivity;
 import com.example.mobile.SettingPackage.EditInfoActivity;
 import com.example.mobile.SettingPackage.InstructionActivity;
 import com.example.mobile.SettingPackage.LanguageActivity;
 import com.example.mobile.SettingPackage.PrivacyActivity;
 //import com.example.ui.TicketHandler.BoughtTicketActivity;
+import com.example.mobile.SettingPackage.SubscriptionActivity;
+import com.example.mobile.databinding.ActivityBuyingCoinBinding;
 import com.example.mobile.databinding.FragmentSettingBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -123,34 +129,38 @@ public class SettingFragment extends Fragment {
 
         binding.navHeader.username.setText(MainActivity.currentUser.getName());
         binding.navHeader.email.setText(MainActivity.currentUser.getEmail());
-//        if (MainActivity.currentUser.getVipExpiredTimestamp() > System.currentTimeMillis()) {
-//        }
-//        ObjectAnimator animator = ObjectAnimator.ofInt(binding.navHeader.username, "backgroundColor", Color.BLUE, Color.RED, Color.GREEN);
-//
-//        // duration of one color
-//        animator.setDuration(500);
-//        animator.setEvaluator(new ArgbEvaluator());
-//
-//        // color will be show in reverse manner
-//        animator.setRepeatCount(Animation.REVERSE);
-//
-//        // It will be repeated up to infinite time
-//        animator.setRepeatCount(Animation.INFINITE);
-//        animator.start();
 
-        Handler handler = new Handler();
-        int[] colors = {Color.BLUE, Color.WHITE, Color.YELLOW, Color.GREEN};
-        final int[] i = new int[1];
-        Runnable runnable = new Runnable () {
-            @Override
-            public void run() {
-                i[0] = i[0] % colors.length;
-                binding.navHeader.username.setTextColor(colors[i[0]]);
-                i[0]++;
-                handler.postDelayed(this, 1000);
-            }
-        };
-        handler.postDelayed(runnable, 1000);
+        if(MainActivity.currentUser.getVipExpiredTimestamp() > System.currentTimeMillis() / 1000) {
+            Handler handler = new Handler();
+            int[] colors = {Color.BLUE, Color.WHITE, Color.YELLOW, Color.GREEN};
+            final int[] i = new int[1];
+            Runnable runnable = new Runnable () {
+                @Override
+                public void run() {
+                    i[0] = i[0] % colors.length;
+                    binding.navHeader.username.setTextColor(colors[i[0]]);
+                    binding.navHeader.tierBadge.setTextColor(colors[i[0]]);
+                    i[0]++;
+                    handler.postDelayed(this, 200);
+                }
+            };
+            handler.postDelayed(runnable, 200);
+
+            binding.navHeader.tierBadge.setText("Status: VIP");
+            binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_vip));
+            binding.subscriptionTv.setText("Extend subscription");
+        } else {
+            binding.navHeader.tierBadge.setText("Status: Standard");
+            binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_standard));
+            binding.subscriptionTv.setText("New subscription");
+        }
+
+        String prefix0 = "\uD83E\uDE99 Coin: ";
+        String amount0 = String.valueOf(MainActivity.currentUser.getCoin());
+        Spannable wordToSpan = new SpannableString(prefix0 + amount0);
+        wordToSpan.setSpan(new ForegroundColorSpan(Color.YELLOW), prefix0.length(), wordToSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        binding.navHeader.coin.setText(wordToSpan);
+
 
         binding.navHeader.editInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +172,32 @@ public class SettingFragment extends Fragment {
                     }
                 });
                 startActivity(new Intent(getActivity(), EditInfoActivity.class));
+            }
+        });
+
+        binding.subscriptionTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.subscriptionTv.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.subscriptionTv.animate().scaleX(1f).scaleY(1f).setDuration(100);
+                    }
+                });
+                startActivity(new Intent(getActivity(), SubscriptionActivity.class));
+            }
+        });
+
+        binding.coinTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.coinTv.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.coinTv.animate().scaleX(1f).scaleY(1f).setDuration(100);
+                    }
+                });
+                startActivity(new Intent(getActivity(), BuyingCoinActivity.class));
             }
         });
 

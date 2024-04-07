@@ -45,9 +45,9 @@
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/brown_gradient</item>
+        <item name="android:background">@drawable/blue_gradient</item>
         <!-- Support library compatibility -->
-        <item name="background">@drawable/brown_gradient</item>
+        <item name="background">@drawable/blue_gradient</item>
     </style>
 
     <style name="circle">
