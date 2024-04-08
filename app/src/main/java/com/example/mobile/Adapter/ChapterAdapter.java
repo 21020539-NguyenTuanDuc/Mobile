@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -19,9 +20,9 @@ import java.util.List;
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder> {
 
     private FirebaseStorage storage;
-    private List<String> chapterList;
+    private List<ChapterModel> chapterList;
 
-    public ChapterAdapter(List<String> chapterList) {
+    public ChapterAdapter(List<ChapterModel> chapterList) {
         this.chapterList = chapterList;
         storage = FirebaseStorage.getInstance();
     }
@@ -35,8 +36,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
 
     @Override
     public void onBindViewHolder(@NonNull ChapterViewHolder holder, int position) {
-        String chapter = chapterList.get(position);
-        holder.bind(chapter, position);
+        ChapterModel chapter = chapterList.get(position);
+        holder.bind(chapter);
     }
 
     @Override
@@ -55,25 +56,27 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
             ivChapter = itemView.findViewById(R.id.ivChapter);
         }
 
-        public void bind(String chapter, int position) {
+        public void bind(ChapterModel chapter) {
             // Set text for tvChapter
-            tvChapter.setText("Chapter " + (position + 1));
+            tvChapter.setText("Chapter " + (getAdapterPosition() + 1));
 
-            // Load image from Firebase Storage
-            String imageName = chapterList.get(position);
-            StorageReference imageRef = storage.getReference().child("images/" + imageName);
-            // Load image from Storage
-            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                // Ensure uri is not null before loading image
-                if (uri != null) {
-                    Glide.with(itemView.getContext())
-                            .load(uri)
-                            .centerCrop()
-                            .into(ivChapter);
-                }
-            }).addOnFailureListener(exception -> {
-                // Handle failure
-            });
+            // Load first image from Firebase Storage as chapter thumbnail
+            if (chapter.getList() != null && chapter.getList().size() > 0) {
+                String firstImageName = chapter.getList().get(0);
+                StorageReference imageRef = storage.getReference().child("images/" + firstImageName);
+                // Load image from Storage
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Ensure uri is not null before loading image
+                    if (uri != null) {
+                        Glide.with(itemView.getContext())
+                                .load(uri)
+                                .centerCrop()
+                                .into(ivChapter);
+                    }
+                }).addOnFailureListener(exception -> {
+                    // Handle failure
+                });
+            }
         }
     }
 }

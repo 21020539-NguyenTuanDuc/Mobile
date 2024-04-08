@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.mobile.MainActivity;
+import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +50,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
     Button btnRead;
     FirebaseFirestore db;
     MangaModel manga;
+    ChapterModel chapter;
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -197,6 +199,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                                                                     intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
                                                                     intent.putExtra("currentChap", manga.getCurrentChap());
                                                                     intent.putExtra("manga", manga);
+                                                                    intent.putExtra("chapter", chapter);
                                                                     startActivity(intent);
                                                                 } else {
                                                                     // Xử lý trường hợp dữ liệu không hợp lệ
