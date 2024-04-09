@@ -2,6 +2,7 @@ package com.example.mobile.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +73,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         private ImageView ivManga;
         private TextView tvName;
+        private TextView tvAuthor;
+        private TextView tvGenres;
+        private TextView tvChap;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivManga = itemView.findViewById(R.id.ivManga);
             tvName = itemView.findViewById(R.id.tvName);
+            tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            tvGenres = itemView.findViewById(R.id.tvGenres);
+            tvChap = itemView.findViewById(R.id.tvChap);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,6 +133,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 // Xử lý khi load ảnh thất bại
             });
             tvName.setText(manga.getName());
+            tvAuthor.setText(manga.getAuthor());
+            List<String> genresList = manga.getGenres();
+            String genresText = TextUtils.join(", ", genresList);
+            String genresFormat = String.format("Genres: %s", genresText);
+            tvGenres.setText(genresFormat);
+            int numberOfChaps = manga.getChapList().size();
+            String numberOfChapsString = String.valueOf(numberOfChaps);
+            String totalChaps = manga.getChapTotal();
+            String displayChaps = String.format("Chapters: %s/%s", numberOfChapsString, totalChaps);
+            tvChap.setText(displayChaps);
         }
 
         public void onItemClick(String id, String image, String name) {

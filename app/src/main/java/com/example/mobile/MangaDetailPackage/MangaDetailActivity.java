@@ -102,9 +102,52 @@ public class MangaDetailActivity extends AppCompatActivity {
                 });
 
         btnChap.setOnClickListener(view -> {
-            Intent intent = new Intent(MangaDetailActivity.this, ChapterActivity.class);
-            intent.putExtra("manga", manga);
-            startActivity(intent);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.collection("User").document(userId).get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    List<String> historyList = (List<String>) document.get("historyList");
+                                    if (historyList == null) {
+                                        historyList = new ArrayList<>();
+                                    }
+
+                                    if (historyList.contains(manga.getId())) {
+                                        historyList.remove(manga.getId());
+                                    }
+
+                                    historyList.add(manga.getId());
+
+                                    if (historyList.size() > MAX_HISTORY_SIZE) {
+                                        historyList.remove(0);
+                                    }
+
+                                    // Cập nhật historyList trên Firestore
+                                    db.collection("User").document(userId)
+                                            .update("historyList", historyList)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(MangaDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+                                                // Sau khi cập nhật historyList thành công, chuyển đến ChapterActivity
+                                                Intent intent = new Intent(MangaDetailActivity.this, ChapterActivity.class);
+                                                intent.putExtra("manga", manga);
+                                                startActivity(intent);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                // Xử lý trường hợp lỗi khi cập nhật trên Firestore
+                                                Log.e(TAG, "Error updating history list", e);
+                                                Toast.makeText(MangaDetailActivity.this, "Failed to update history list", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            } else {
+                                // Xử lý trường hợp lỗi khi truy vấn Firestore
+                                Log.e(TAG, "Error getting document", task.getException());
+                                Toast.makeText(MangaDetailActivity.this, "Failed to get document", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         });
 
         btnFav.setOnClickListener(view -> {

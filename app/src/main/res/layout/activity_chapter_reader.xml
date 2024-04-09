@@ -57,7 +57,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="#FF9800"
-            android:text="Previous"
+            android:text="Home"
             android:textColor="#FFFFFF"
             app:cornerRadius="20dp" />
         <Button
@@ -72,19 +72,6 @@
             android:text="Chapter"
             android:textColor="#FFFFFF"
             app:cornerRadius="20dp" />
-        <Button
-            android:id="@+id/b3"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="49dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="#EC407A"
-            android:text="next"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="20dp"
-            tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

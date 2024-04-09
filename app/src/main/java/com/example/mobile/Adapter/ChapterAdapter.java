@@ -34,10 +34,28 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
         return new ChapterViewHolder(view);
     }
 
+    public interface OnChapterClickListener {
+        void onChapterClick(int position);
+    }
+    private OnChapterClickListener onChapterClickListener;
+    public void setOnChapterClickListener(OnChapterClickListener listener) {
+        this.onChapterClickListener = listener;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ChapterViewHolder holder, int position) {
         ChapterModel chapter = chapterList.get(position);
         holder.bind(chapter);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int clickedPosition = holder.getAdapterPosition(); // Lấy position của item được nhấn
+                if (onChapterClickListener != null && clickedPosition != RecyclerView.NO_POSITION) {
+                    onChapterClickListener.onChapterClick(clickedPosition);
+                }
+            }
+        });
     }
 
     @Override
