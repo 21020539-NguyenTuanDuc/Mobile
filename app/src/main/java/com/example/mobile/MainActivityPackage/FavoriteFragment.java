@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class FavoriteFragment extends Fragment {
@@ -35,6 +37,7 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         recyclerView = view.findViewById(R.id.recyclerView);
