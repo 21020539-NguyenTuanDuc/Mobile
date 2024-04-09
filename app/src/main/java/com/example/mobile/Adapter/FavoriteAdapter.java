@@ -119,7 +119,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         }
 
         public void bind(MangaModel manga) {
-            String imageName = manga.getImage();
+            String imageName = manga.getPoster();
 
             StorageReference imageRef = storage.getReference().child("images/" + imageName);
 

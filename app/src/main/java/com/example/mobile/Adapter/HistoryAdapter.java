@@ -121,7 +121,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
 
         public void bind(MangaModel manga) {
-            String imageName = manga.getImage();
+            String imageName = manga.getPoster();
 
             StorageReference imageRef = storage.getReference().child("images/" + imageName);
 
