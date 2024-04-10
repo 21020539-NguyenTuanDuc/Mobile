@@ -210,7 +210,7 @@
             android:backgroundTint="#29B6F6"
             android:text="CHAPTER"
             android:textColor="#FFFFFF"
-            app:cornerRadius="20dp" />
+            app:cornerRadius="10dp" />
 
         <Button
             android:id="@+id/btnRead"
@@ -223,7 +223,7 @@
             android:backgroundTint="#FF9800"
             android:text="READ"
             android:textColor="#FFFFFF"
-            app:cornerRadius="20dp" />
+            app:cornerRadius="10dp" />
 
         <Button
             android:id="@+id/btnFav"
@@ -236,7 +236,7 @@
             android:backgroundTint="#EC407A"
             android:text="FAVORITE"
             android:textColor="#FFFFFF"
-            app:cornerRadius="20dp"
+            app:cornerRadius="10dp"
             tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
