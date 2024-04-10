@@ -39,7 +39,7 @@
                     android:background="#555353"
                     android:text="Chap"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     android:gravity="center"
                     />
             </LinearLayout>

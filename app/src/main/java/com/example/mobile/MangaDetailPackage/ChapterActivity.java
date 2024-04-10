@@ -108,28 +108,47 @@ public class ChapterActivity extends AppCompatActivity {
             @Override
             public void onChapterClick(int position) {
                 ChapterModel clickedChapter = chapters.get(position);
+                // Truy vấn chapList từ Firestore
+                db.collection("Manga").document(manga.getId())
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                // Kiểm tra kiểu dữ liệu của chapList
+                                Object chapListObject = documentSnapshot.get("chapList");
+                                if (chapListObject instanceof List<?>) {
+                                    // Ép kiểu chapListObject thành List<String>
+                                    List<String> chapList = (List<String>) chapListObject;
+
+                                    // Cập nhật dữ liệu trên Firestore và chuyển đến ChapterReaderActivity
+                                    updateCurrentChapterAndStartActivity(position, clickedChapter, chapList);
+                                } else {
+                                    // Xử lý trường hợp dữ liệu không hợp lệ
+                                    Toast.makeText(ChapterActivity.this, "Dữ liệu chapList không hợp lệ", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(ChapterActivity.this, "Không tìm thấy manga", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+
+            private void updateCurrentChapterAndStartActivity(int position, ChapterModel clickedChapter, List<String> chapList) {
                 db.collection("Manga").document(manga.getId())
                         .update("currentChap", position + 1)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Intent intent = new Intent(ChapterActivity.this, ChapterReaderActivity.class);
-                                intent.putExtra("chapter", clickedChapter);
-                                intent.putExtra("currentChap", position + 1);
-                                intent.putExtra("manga", manga);
-                                intent.putStringArrayListExtra("imageList", (ArrayList<String>) clickedChapter.getList());
-                                intent.putExtra("currentChapterIndex", position);
-                                startActivity(intent);
-                            }
+                        .addOnSuccessListener(aVoid -> {
+                            Intent intent = new Intent(ChapterActivity.this, ChapterReaderActivity.class);
+                            intent.putExtra("chapter", clickedChapter);
+                            intent.putExtra("currentChap", position + 1);
+                            intent.putExtra("manga", manga);
+                            intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
+                            intent.putStringArrayListExtra("imageList", (ArrayList<String>) clickedChapter.getList());
+                            intent.putExtra("currentChapterIndex", position);
+                            startActivity(intent);
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Xử lý trường hợp lỗi khi cập nhật trên Firestore
-                                Log.e(TAG, "Error updating current chapter", e);
-                                // Hiển thị thông báo lỗi nếu cần
-                                Toast.makeText(ChapterActivity.this, "Failed to update current chapter", Toast.LENGTH_SHORT).show();
-                            }
+                        .addOnFailureListener(e -> {
+                            // Xử lý trường hợp lỗi khi cập nhật trên Firestore
+                            Log.e(TAG, "Error updating current chapter", e);
+                            // Hiển thị thông báo lỗi nếu cần
+                            Toast.makeText(ChapterActivity.this, "Failed to update current chapter", Toast.LENGTH_SHORT).show();
                         });
             }
         });

@@ -49,6 +49,18 @@
         app:layout_constraintTop_toBottomOf="@+id/scrollView3">
 
         <Button
+            android:id="@+id/prev"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="49dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.4"
+            android:backgroundTint="#0FA316"
+            android:text="Prev"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp" />
+        <Button
             android:id="@+id/b1"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="49dp"
@@ -59,7 +71,7 @@
             android:backgroundTint="#FF9800"
             android:text="Home"
             android:textColor="#FFFFFF"
-            app:cornerRadius="20dp" />
+            app:cornerRadius="10dp" />
         <Button
             android:id="@+id/b2"
             style="?android:attr/buttonBarButtonStyle"
@@ -71,7 +83,20 @@
             android:backgroundTint="#29B6F6"
             android:text="Chapter"
             android:textColor="#FFFFFF"
-            app:cornerRadius="20dp" />
+            app:cornerRadius="10dp" />
+
+        <Button
+            android:id="@+id/next"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="49dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.4"
+            android:backgroundTint="#0FA316"
+            android:text="Next"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
     private ImageButton imageButton;
     private ScrollView scrollView;
     private ImageView imageManga;
-    private Button b1, b2, b3;
+    private Button b1, b2, prev, next;
     MangaModel manga;
     ChapterModel chapter;
     private List<String> chapList = new ArrayList<>();
@@ -66,6 +66,8 @@ public class ChapterReaderActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
+        prev = findViewById(R.id.prev);
+        next = findViewById(R.id.next);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -79,8 +81,40 @@ public class ChapterReaderActivity extends AppCompatActivity {
 
         int currentChap = getIntent().getIntExtra("currentChap", 0) - 1;
 
-        currentChapterIndex = getIntent().getIntExtra("currentChapterIndex", currentChap);
+        currentChapterIndex = currentChap;
         loadChapterImage(currentChapterIndex);
+
+        prev.setOnClickListener(v -> {
+            if (currentChapterIndex > 0) {
+                currentChapterIndex--;
+                db.collection("Manga").document(manga.getId())
+                        .update("currentChap", currentChapterIndex + 1)
+                        .addOnSuccessListener(aVoid -> {
+                            // Cập nhật thành công, tiến hành load chap mới và cập nhật giao diện
+                            loadChapterImage(currentChapterIndex);
+                            b2.setText("Chap " + (currentChapterIndex + 1));
+                        })
+                        .addOnFailureListener(e -> {
+                            // Xử lý khi có lỗi xảy ra trong quá trình cập nhật dữ liệu
+                        });
+            }
+        });
+
+        next.setOnClickListener(v -> {
+            if (currentChapterIndex < chapList.size() - 1) {
+                currentChapterIndex++;
+                db.collection("Manga").document(manga.getId())
+                        .update("currentChap", currentChapterIndex + 1)
+                        .addOnSuccessListener(aVoid -> {
+                            // Cập nhật thành công, tiến hành load chap mới và cập nhật giao diện
+                            loadChapterImage(currentChapterIndex);
+                            b2.setText("Chap " + (currentChapterIndex + 1));
+                        })
+                        .addOnFailureListener(e -> {
+                            // Xử lý khi có lỗi xảy ra trong quá trình cập nhật dữ liệu
+                        });
+            }
+        });
 
         b1.setOnClickListener(v -> {
             Intent intent = new Intent(ChapterReaderActivity.this, MainActivity.class);

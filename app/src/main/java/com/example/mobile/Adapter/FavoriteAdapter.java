@@ -139,7 +139,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             int numberOfChaps = manga.getChapList().size();
             String numberOfChapsString = String.valueOf(numberOfChaps);
             String totalChaps = manga.getChapTotal();
-            String displayChaps = String.format("Chapters: %s/%s", numberOfChapsString, totalChaps);
+            String displayChaps = String.format("Chap: %s/%s", numberOfChapsString, totalChaps);
             tvChap.setText(displayChaps);
         }
 
