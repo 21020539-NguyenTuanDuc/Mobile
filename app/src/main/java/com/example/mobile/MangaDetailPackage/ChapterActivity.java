@@ -5,6 +5,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobile.Adapter.ChapterAdapter;
+import com.example.mobile.MainActivity;
 import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
@@ -30,6 +32,7 @@ public class ChapterActivity extends AppCompatActivity {
     private ChapterAdapter adapter;
     private List<String> chapterIdList;
     private FirebaseFirestore db;
+    private Button b1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,12 @@ public class ChapterActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        b1 = findViewById(R.id.b1);
+
+        b1.setOnClickListener(v -> {
+            Intent intent = new Intent(ChapterActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
 
         // Lấy danh sách đầy đủ các đối tượng ChapterModel từ Firestore
         fetchChapterList();

@@ -64,7 +64,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
         // Init views
         scrollView = findViewById(R.id.scrollView3);
         recyclerView = findViewById(R.id.recyclerView);
-        b1 = findViewById(R.id.b1);
+//        b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
         prev = findViewById(R.id.prev);
         next = findViewById(R.id.next);
@@ -116,10 +116,10 @@ public class ChapterReaderActivity extends AppCompatActivity {
             }
         });
 
-        b1.setOnClickListener(v -> {
-            Intent intent = new Intent(ChapterReaderActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+//        b1.setOnClickListener(v -> {
+//            Intent intent = new Intent(ChapterReaderActivity.this, MainActivity.class);
+//            startActivity(intent);
+//        });
 
         b2.setOnClickListener(view -> {
             Intent intent = new Intent(ChapterReaderActivity.this, ChapterActivity.class);

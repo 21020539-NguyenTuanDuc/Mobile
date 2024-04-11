@@ -55,23 +55,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="0.4"
-            android:backgroundTint="#0FA316"
-            android:text="Prev"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="10dp" />
-        <Button
-            android:id="@+id/b1"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="49dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:backgroundTint="#FF9800"
-            android:text="Home"
+            android:backgroundTint="#0FA316"
+            android:text="Previous"
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp" />
+<!--        <Button-->
+<!--            android:id="@+id/b1"-->
+<!--            style="?android:attr/buttonBarButtonStyle"-->
+<!--            android:layout_width="49dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginEnd="5dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="#FF9800"-->
+<!--            android:text="Home"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            app:cornerRadius="10dp" />-->
         <Button
             android:id="@+id/b2"
             style="?android:attr/buttonBarButtonStyle"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="0.4"
+            android:layout_weight="1"
             android:backgroundTint="#0FA316"
             android:text="Next"
             android:textColor="#FFFFFF"
