@@ -1,88 +1,183 @@
 package com.example.mobile.MainActivityPackage.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.mobile.MainActivityPackage.SearchActivity.Comic;
+import com.example.mobile.MainActivityPackage.HomeFragment;
+import com.example.mobile.MainActivityPackage.SearchFragment;
+import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
+import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComicAdapter extends ArrayAdapter<Comic> {
-    private Context ct;
-    private ArrayList<Comic> arr;
-    private ArrayList<Integer> indexList;
-    private String searchKeyword;
+public class ComicAdapter extends BaseAdapter {
 
-    public ComicAdapter(Context context, int resource, List<Comic> objects) {
-        super(context, resource, objects);
-        this.ct = context;
-        this.arr = new ArrayList<>(objects);
-        this.indexList = new ArrayList<>();
-        fillIndexListIfEmpty();
-        this.searchKeyword = "";
+    private Context context;
+    private List<MangaModel> mangaList;
+
+    private List<MangaModel> copy_mangaList;
+    private SearchFragment fragment;
+    private FirebaseStorage storage;
+
+    public ComicAdapter(Context context, SearchFragment fragment) {
+        this.context = context;
+        this.mangaList = new ArrayList<>();
+        this.fragment = fragment;
+        storage = FirebaseStorage.getInstance();
+        this.copy_mangaList = new ArrayList<>();
     }
 
-    private void fillIndexListIfEmpty() {
-        for (int i = 0; i < arr.size(); i++) {
-            indexList.add(i); // Thêm index của comic vào danh sách nếu tên chứa từ khóa tìm kiếm
-        }
+    public void addManga(int position, MangaModel manga) {
+        mangaList.add(position, manga);
+        copy_mangaList.add(position, manga);
+        notifyDataSetChanged();
     }
 
-    public void searchComicByName(String query) {
-        query = query.trim().toUpperCase();
-        indexList.clear();
-        if (!"".equals(query)) {
-            for (int i = 0; i < arr.size(); i++) {
-                if (arr.get(i).getName().toUpperCase().contains(query)) {
-                    indexList.add(i); // Thêm index của comic vào danh sách nếu tên chứa từ khóa tìm kiếm
-                }
-            }
-        } else {
-            fillIndexListIfEmpty();
-        }
-        this.searchKeyword = query;
-        notifyDataSetChanged(); // Cập nhật giao diện
-    }
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public int getCount() {
+        return mangaList.size();
+    }
 
-        if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater) ct.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_search_comic_view, null);
-        }
+    @Override
+    public Object getItem(int position) {
+        return mangaList.get(position);
+    }
 
-        if (position >= 0 && position < arr.size() && indexList.contains(position)) { // Kiểm tra vị trí có hợp lệ không
-            convertView.setVisibility(View.VISIBLE);
-            Comic comic = arr.get(position); // Lấy ra comic tương ứng với index trong danh sách filteredIndexes
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-            TextView name_comic = convertView.findViewById(R.id.name_comic);
-            TextView chapter_name = convertView.findViewById(R.id.chapter_name);
-            ImageView image_comic = convertView.findViewById(R.id.img_comic);
-
-            name_comic.setText(comic.getShortName());
-            chapter_name.setText(comic.getChapter());
-            Glide.with(this.ct).load(comic.getImageURL()).into(image_comic);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_search_comic_view, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
         } else {
-            convertView.setVisibility(View.INVISIBLE);
+            holder = (ViewHolder) convertView.getTag();
         }
+
+        MangaModel manga = mangaList.get(position);
+        holder.bind(manga);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MangaDetailActivity.class);
+                intent.putExtra("id", manga.getId());
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }
 
-    public void setSearchKeyword(String keyword) {
-        this.searchKeyword = keyword.trim();
+    public void searchComicByName(String query) {
+        query = query.trim();
+        mangaList.clear();
+        mangaList.addAll(copy_mangaList);
+        List<MangaModel> filteredList = new ArrayList<>();
+        if (!TextUtils.isEmpty(query)) {
+            for (MangaModel manga : mangaList) {
+                // Kiểm tra xem tên của manga có chứa từ khóa tìm kiếm không
+                if (manga.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(manga);
+                }
+            }
+        } else {
+            filteredList.addAll(mangaList); // Nếu query rỗng, hiển thị toàn bộ danh sách manga
+        }
+        // Cập nhật danh sách manga hiển thị sau khi tìm kiếm
+        mangaList.clear();
+        mangaList.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    public void searchComicByGenre(List<String> selectedGenres) {
+        mangaList.clear();
+        mangaList.addAll(copy_mangaList);
+        List<MangaModel> filteredList = new ArrayList<>();
+        if (selectedGenres != null && !selectedGenres.isEmpty()) {
+            for (MangaModel manga : mangaList) {
+                // Kiểm tra xem manga có thuộc ít nhất một thể loại được chọn không
+                boolean containsGenre = true;
+                for (String genre : selectedGenres) {
+                    if (!manga.getGenres().contains(genre)) {
+                        containsGenre = false;
+                        break;
+                    }
+                }
+                if (containsGenre) {
+                    filteredList.add(manga);
+                }
+            }
+        } else {
+            filteredList.addAll(mangaList); // Nếu không có thể loại nào được chọn, hiển thị toàn bộ danh sách manga
+        }
+        // Cập nhật danh sách manga hiển thị sau khi tìm kiếm theo thể loại
+        mangaList.clear();
+        mangaList.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+
+    private class ViewHolder {
+        private ImageView ivManga;
+        private TextView tvName;
+        private TextView tvChap;
+
+        ViewHolder(View itemView) {
+            ivManga = itemView.findViewById(R.id.img_comic);
+            tvName = itemView.findViewById(R.id.name_comic);
+            tvChap = itemView.findViewById(R.id.chapter_name);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (int) v.getTag();
+                    MangaModel manga = mangaList.get(position);
+                    fragment.onItemClick(manga.getId(), manga.getImage(), manga.getName());
+                }
+            });
+        }
+
+
+        void bind(MangaModel manga) {
+            String imageName = manga.getPoster();
+            StorageReference imageRef = storage.getReference().child("images/" + imageName);
+
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(context)
+                        .load(uri)
+                        .into(ivManga);
+            }).addOnFailureListener(exception -> {
+                // Handle failure
+            });
+
+            tvName.setText(manga.getName());
+            List<String> genresList = manga.getGenres();
+            String genresText = TextUtils.join(", ", genresList);
+            String genresFormat = String.format("Genres: %s", genresText);
+            int numberOfChaps = manga.getChapList().size();
+            String numberOfChapsString = String.valueOf(numberOfChaps);
+            String totalChaps = manga.getChapTotal();
+            String displayChaps = String.format("Chap: %s/%s", numberOfChapsString, totalChaps);
+            tvChap.setText(displayChaps);
+        }
     }
 }

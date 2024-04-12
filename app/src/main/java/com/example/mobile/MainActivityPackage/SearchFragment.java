@@ -1,7 +1,10 @@
 package com.example.mobile.MainActivityPackage;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -10,110 +13,143 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.mobile.MainActivityPackage.SearchActivity.Comic;
-import com.example.mobile.MainActivityPackage.interfaces.GetComic;
 import com.example.mobile.MainActivityPackage.adapter.ComicAdapter;
+import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
+import com.example.mobile.MainActivityPackage.SearchActivity.GenreFilterActivity;
+import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+public class SearchFragment extends Fragment {
 
-public class SearchFragment extends Fragment implements GetComic {
+    private GridView gridView;
+    private List<MangaModel> mangaList;
+    private ComicAdapter comicAdapter;
+    private FirebaseFirestore db;
+    private EditText searchEditText;
 
-    GridView gdvComicList;
+    private static final int REQUEST_CODE_FILTER = 101;
 
-    ComicAdapter adapter;
-
-    ArrayList<Comic> comicArrayList;
-
-    EditText searchEditText;
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
-        init(view);
-        mapping(view);
-        setUp();
-        setClick();
-//        new ApiGetComic(this).execute();
-        return view;
-    }
 
-    private void init(View view) {
-        comicArrayList = new ArrayList<>();
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
-        adapter = new ComicAdapter(view.getContext(), 0, comicArrayList);
-    }
-    private void mapping(View view) {
-        gdvComicList = view.findViewById(R.id.gdvComicList);
+        gridView = view.findViewById(R.id.gdvComicList);
+        ImageButton filteredButton = view.findViewById(R.id.filterButton);
+        mangaList = new ArrayList<>();
+        comicAdapter = new ComicAdapter(getActivity(), this); // Pass the fragment reference
+        gridView.setAdapter(comicAdapter);
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Load manga data
+        loadMangaData();
+
+        // Set click listener for grid items
+        gridView.setOnItemClickListener((parent, view1, position, id) -> {
+            // Get the position of the item clicked in the adapter
+            int adapterPosition = gridView.getPositionForView(view1);
+
+            // Ensure the adapter position is valid
+            if (adapterPosition != GridView.INVALID_POSITION) {
+                MangaModel selectedManga = mangaList.get(adapterPosition);
+                onItemClick(selectedManga.getId(), selectedManga.getImage(), selectedManga.getName());
+            }
+        });
+
+        filteredButton.setOnClickListener(v -> openGenreFilterActivity());
+
+        // EditText for searching
         searchEditText = view.findViewById(R.id.searchEditText);
-    }
-    private void setUp() {
-        gdvComicList.setAdapter(adapter);
-    }
-    private void setClick() {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Perform actions before text changed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                // Perform actions while text is changing
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = searchEditText.getText().toString();
-                adapter.searchComicByName(str);
+                // Perform actions after text changed
+                performSearch(s.toString());
             }
         });
+
+        return view;
+    }
+
+    private void openGenreFilterActivity() {
+        Intent intent = new Intent(getContext(), GenreFilterActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_FILTER);
     }
 
     @Override
-    public void start() {
-        Toast.makeText(this.getContext(), "Getting data ...", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void end(String data) {
-        System.out.print("hello");
-        try {
-            JSONArray arr = new JSONArray(data);
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject o = arr.getJSONObject(i);
-                comicArrayList.add(new Comic(o));
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FILTER && resultCode == AppCompatActivity.RESULT_OK) {
+            ArrayList<String> selectedGenres = data.getStringArrayListExtra("selectedGenres");
+            if (selectedGenres != null) {
+                // Xử lý danh sách các thể loại được chọn
+                StringBuilder selectedGenresString = new StringBuilder("Selected genres: ");
+                for (String genre : selectedGenres) {
+                    selectedGenresString.append(genre).append(", ");
+                }
+                performFilter(selectedGenres);
+                Toast.makeText(getContext(), selectedGenresString.toString(), Toast.LENGTH_SHORT).show();
             }
-            adapter = new ComicAdapter(this.getContext(), 0, comicArrayList);
-            gdvComicList.setAdapter(adapter);
-        } catch (JSONException e){
-
         }
     }
 
-    @Override
-    public void isError() {
-        Toast.makeText(this.getContext(), "Error", Toast.LENGTH_SHORT).show();
+    private void loadMangaData() {
+        // Query Firestore for manga data
+        db.collection("Manga")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mangaList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            MangaModel manga = document.toObject(MangaModel.class);
+                            comicAdapter.addManga(0, manga);
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Error loading manga: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void performSearch(String query) {
+        // Perform search based on the query and update data in GridView or RecyclerView
+        // For example: update manga list based on search result
+        comicAdapter.searchComicByName(query);
+    }
+
+    private void performFilter(List<String> selectedGenres) {
+        comicAdapter.searchComicByGenre(selectedGenres);
+    }
+
+    public void onItemClick(String id, String image, String name) {
+        Intent i = new Intent(getContext(), MangaDetailActivity.class);
+        i.putExtra("id", id);
+        i.putExtra("image", image);
+        i.putExtra("name", name);
+        startActivity(i);
     }
 }

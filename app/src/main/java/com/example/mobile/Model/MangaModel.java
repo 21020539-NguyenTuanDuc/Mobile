@@ -7,6 +7,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.DocumentReference;
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MangaModel implements Serializable {
@@ -23,6 +24,21 @@ public class MangaModel implements Serializable {
     private int currentChap;
 
     public MangaModel() {
+    }
+
+    // Constructor sao chép
+    public MangaModel(MangaModel other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.image = other.image;
+        this.poster = other.poster;
+        this.author = other.author;
+        this.chapList = new ArrayList<>(other.chapList); // Sao chép danh sách chap
+        this.chapTotal = other.chapTotal;
+        this.description = other.description;
+        this.genres = new ArrayList<>(other.genres); // Sao chép danh sách thể loại
+        this.likes = other.likes;
+        this.currentChap = other.currentChap;
     }
 
 //    public MangaModel(String id, String name, String image) {
