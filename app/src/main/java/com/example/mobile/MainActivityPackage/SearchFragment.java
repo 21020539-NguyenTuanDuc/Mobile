@@ -2,6 +2,7 @@ package com.example.mobile.MainActivityPackage;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -18,6 +19,7 @@ import com.example.mobile.MainActivityPackage.interfaces.GetComic;
 import com.example.mobile.MainActivityPackage.adapter.ComicAdapter;
 import com.example.mobile.R;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +39,7 @@ public class SearchFragment extends Fragment implements GetComic {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
         init(view);
         mapping(view);
         setUp();

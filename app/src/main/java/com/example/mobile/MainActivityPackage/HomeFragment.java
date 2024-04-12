@@ -1,62 +1,96 @@
 package com.example.mobile.MainActivityPackage;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
-import com.example.mobile.MainActivityPackage.SearchActivity.Comic;
-import com.example.mobile.MainActivityPackage.adapter.ComicAdapter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.example.mobile.Adapter.MangaAdapter;
+import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
+import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
-    GridView gdvComicList;
+    private GridView gridView;
+    private List<MangaModel> mangaList;
+    private MangaAdapter mangaAdapter;
+    private FirebaseFirestore db;
 
-    ComicAdapter adapter;
-
-    ArrayList<Comic> comicArrayList;
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
-        init(view);
-        mapping(view);
-        setUp();
-        setClick();
+        gridView = view.findViewById(R.id.gdvComicList);
+        mangaList = new ArrayList<>();
+        mangaAdapter = new MangaAdapter(getActivity(), this); // Pass the fragment reference
+        gridView.setAdapter(mangaAdapter);
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Load manga data
+        loadMangaData();
+
+        // Set click listener for grid items
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the position of the item clicked in the adapter
+                int adapterPosition = gridView.getPositionForView(view);
+
+                // Ensure the adapter position is valid
+                if (adapterPosition != GridView.INVALID_POSITION) {
+                    MangaModel selectedManga = mangaList.get(adapterPosition);
+                    HomeFragment.this.onItemClick(selectedManga.getId(), selectedManga.getImage(), selectedManga.getName());
+                }
+            }
+        });
+
         return view;
     }
 
-    private void init(View view) {
-        comicArrayList = new ArrayList<>();
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
-        comicArrayList.add(new Comic("Naruto", "Chapter 700.9", "https://www.nettruyentr.vn/images/comics/naruto.jpg"));
-        comicArrayList.add(new Comic("Chuyển sinh thành Liễu đột biến", "Chapter 24", "https://www.nettruyentr.vn/images/comics/chuyen-sinh-thanh-lieu-dot-bien.jpg"));
-        comicArrayList.add(new Comic("Tuyệt sắc đạo lữ đều nói Ngô Hoảng thể chất vô địch", "Chapter 210", "https://www.nettruyentr.vn/images/comics/tuyet-sac-dao-lu-deu-noi-ngo-hoang-the-chat-vo-dich.jpg"));
-        comicArrayList.add(new Comic("Chưởng môn khiêm tốn chút", "Chapter 343", "https://www.nettruyentr.vn/images/comics/chuong-mon-khiem-ton-chut.jpg"));
+    private void loadMangaData() {
+        // Query Firestore for manga data
+        db.collection("Manga")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mangaList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            MangaModel manga = document.toObject(MangaModel.class);
+                            mangaAdapter.addManga(0, manga);
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Error loading manga: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
-        adapter = new ComicAdapter(view.getContext(), 0, comicArrayList);
+
+    public void onItemClick(String id, String image, String name) {
+        Intent i = new Intent(getContext(), MangaDetailActivity.class);
+        i.putExtra("id", id);
+        i.putExtra("image", image);
+        i.putExtra("name", name);
+        startActivity(i);
     }
-    private void mapping(View view) {
-        gdvComicList = view.findViewById(R.id.gdvComicList);
-    }
-    private void setUp() {
-        gdvComicList.setAdapter(adapter);
-    }
-    private void setClick() {}
 }

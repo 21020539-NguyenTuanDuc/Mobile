@@ -13,6 +13,7 @@ public class MangaModel implements Serializable {
     private String id;
     private String name;
     private String image;
+    private String poster;
     private String author;
     private List<String> chapList;
     private String chapTotal;
@@ -40,10 +41,11 @@ public class MangaModel implements Serializable {
 //        this.genres = genres;
 //        this.likes = likes;
 //    }
-    public MangaModel(String id, String name, String image, String author, String description, List<String> chapList, List<String> genres, int likes) {
+    public MangaModel(String id, String name, String image, String poster, String author, String description, List<String> chapList, List<String> genres, int likes) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.poster = poster;
         this.author = author;
         this.chapList = chapList;
         this.description = description;
@@ -73,6 +75,13 @@ public class MangaModel implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
     }
 
     public String getAuthor() {

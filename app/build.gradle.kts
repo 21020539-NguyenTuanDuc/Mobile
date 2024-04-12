@@ -42,8 +42,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(files("C:\\Users\\vuthitho\\Documents\\zpdk-release-v3.1.aar"))
+    implementation(fileTree(mapOf("dir" to "C:\\Users\\vuthitho\\Documents", "include" to listOf("*.aar", "*.jar"))))
     implementation(fileTree(mapOf("dir" to "D:\\AndroidRes\\zalopay", "include" to listOf("*.aar", "*.jar"))))
+    implementation(fileTree(mapOf(
+        "dir" to "E:\\Test\\AndroidRes",
+        "include" to listOf("*.aar", "*.jar")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

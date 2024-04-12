@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.mobile.MainActivity;
+import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +50,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
     Button btnRead;
     FirebaseFirestore db;
     MangaModel manga;
+    ChapterModel chapter;
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -96,9 +98,52 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                 });
 
         btnChap.setOnClickListener(view -> {
-            Intent intent = new Intent(FavoriteDetailActivity.this, ChapterActivity.class);
-            intent.putExtra("manga", manga);
-            startActivity(intent);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.collection("User").document(userId).get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    List<String> historyList = (List<String>) document.get("historyList");
+                                    if (historyList == null) {
+                                        historyList = new ArrayList<>();
+                                    }
+
+                                    if (historyList.contains(manga.getId())) {
+                                        historyList.remove(manga.getId());
+                                    }
+
+                                    historyList.add(manga.getId());
+
+                                    if (historyList.size() > MAX_HISTORY_SIZE) {
+                                        historyList.remove(0);
+                                    }
+
+                                    // Cập nhật historyList trên Firestore
+                                    db.collection("User").document(userId)
+                                            .update("historyList", historyList)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(FavoriteDetailActivity.this, "Đã thêm vào lịch sử đọc!", Toast.LENGTH_SHORT).show();
+                                                // Sau khi cập nhật historyList thành công, chuyển đến ChapterActivity
+                                                Intent intent = new Intent(FavoriteDetailActivity.this, ChapterActivity.class);
+                                                intent.putExtra("manga", manga);
+                                                startActivity(intent);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                // Xử lý trường hợp lỗi khi cập nhật trên Firestore
+                                                Log.e(TAG, "Error updating history list", e);
+                                                Toast.makeText(FavoriteDetailActivity.this, "Failed to update history list", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            } else {
+                                // Xử lý trường hợp lỗi khi truy vấn Firestore
+                                Log.e(TAG, "Error getting document", task.getException());
+                                Toast.makeText(FavoriteDetailActivity.this, "Failed to get document", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         });
 
         btnFav.setOnClickListener(view -> {
@@ -197,6 +242,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                                                                     intent.putStringArrayListExtra("chapList", new ArrayList<>(chapList));
                                                                     intent.putExtra("currentChap", manga.getCurrentChap());
                                                                     intent.putExtra("manga", manga);
+                                                                    intent.putExtra("chapter", chapter);
                                                                     startActivity(intent);
                                                                 } else {
                                                                     // Xử lý trường hợp dữ liệu không hợp lệ
