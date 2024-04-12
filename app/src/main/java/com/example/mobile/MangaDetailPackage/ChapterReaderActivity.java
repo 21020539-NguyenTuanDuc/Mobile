@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.example.mobile.Adapter.PageAdapter;
+import com.example.mobile.MainActivity;
+import com.example.mobile.MainActivityPackage.HomeFragment;
 import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
@@ -35,13 +37,13 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MangaReaderActivity extends AppCompatActivity {
+public class ChapterReaderActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
     private ImageButton imageButton;
     private ScrollView scrollView;
     private ImageView imageManga;
-    private Button b1, b2, b3;
+    private Button b1, b2, prev, next;
     MangaModel manga;
     ChapterModel chapter;
     private List<String> chapList = new ArrayList<>();
@@ -53,7 +55,7 @@ public class MangaReaderActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manga_reader);
+        setContentView(R.layout.activity_chapter_reader);
 
         storage = FirebaseStorage.getInstance();
         manga = (MangaModel) getIntent().getSerializableExtra("manga");
@@ -62,9 +64,10 @@ public class MangaReaderActivity extends AppCompatActivity {
         // Init views
         scrollView = findViewById(R.id.scrollView3);
         recyclerView = findViewById(R.id.recyclerView);
-        b1 = findViewById(R.id.b1);
+//        b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
-        b3 = findViewById(R.id.b3);
+        prev = findViewById(R.id.prev);
+        next = findViewById(R.id.next);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -78,38 +81,48 @@ public class MangaReaderActivity extends AppCompatActivity {
 
         int currentChap = getIntent().getIntExtra("currentChap", 0) - 1;
 
-        currentChapterIndex = getIntent().getIntExtra("currentChapterIndex", currentChap);
+        currentChapterIndex = currentChap;
         loadChapterImage(currentChapterIndex);
 
-        b1.setOnClickListener(v -> {
+        prev.setOnClickListener(v -> {
             if (currentChapterIndex > 0) {
+                currentChapterIndex--;
                 db.collection("Manga").document(manga.getId())
-                        .update("currentChap", currentChapterIndex)
+                        .update("currentChap", currentChapterIndex + 1)
                         .addOnSuccessListener(aVoid -> {
+                            // Cập nhật thành công, tiến hành load chap mới và cập nhật giao diện
+                            loadChapterImage(currentChapterIndex);
+                            b2.setText("Chap " + (currentChapterIndex + 1));
                         })
                         .addOnFailureListener(e -> {
+                            // Xử lý khi có lỗi xảy ra trong quá trình cập nhật dữ liệu
                         });
-                currentChapterIndex--;
-                loadChapterImage(currentChapterIndex);
-                b2.setText("Chap " + (currentChapterIndex + 1));
             }
         });
 
-        b3.setOnClickListener(v -> {
+        next.setOnClickListener(v -> {
             if (currentChapterIndex < chapList.size() - 1) {
+                currentChapterIndex++;
                 db.collection("Manga").document(manga.getId())
-                        .update("currentChap", currentChapterIndex + 2)
+                        .update("currentChap", currentChapterIndex + 1)
                         .addOnSuccessListener(aVoid -> {
+                            // Cập nhật thành công, tiến hành load chap mới và cập nhật giao diện
+                            loadChapterImage(currentChapterIndex);
+                            b2.setText("Chap " + (currentChapterIndex + 1));
                         })
                         .addOnFailureListener(e -> {
+                            // Xử lý khi có lỗi xảy ra trong quá trình cập nhật dữ liệu
                         });
-                currentChapterIndex++;
-                loadChapterImage(currentChapterIndex);
-                b2.setText("Chap " + (currentChapterIndex + 1));
             }
         });
+
+//        b1.setOnClickListener(v -> {
+//            Intent intent = new Intent(ChapterReaderActivity.this, MainActivity.class);
+//            startActivity(intent);
+//        });
+
         b2.setOnClickListener(view -> {
-            Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+            Intent intent = new Intent(ChapterReaderActivity.this, ChapterActivity.class);
             intent.putExtra("manga", manga);
             startActivity(intent);
         });
