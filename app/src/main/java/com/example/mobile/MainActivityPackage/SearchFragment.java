@@ -83,7 +83,7 @@ public class SearchFragment extends Fragment implements GetComic {
             @Override
             public void afterTextChanged(Editable s) {
                 String str = searchEditText.getText().toString();
-                adapter.sortComicByName(str);
+                adapter.searchComicByName(str);
             }
         });
     }
