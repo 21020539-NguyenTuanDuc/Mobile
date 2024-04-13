@@ -82,6 +82,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".MainActivityPackage.SearchActivity.GenreFilterActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
