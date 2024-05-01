@@ -2,6 +2,7 @@ package com.example.mobile.MainActivityPackage;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
@@ -57,6 +59,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -111,6 +115,8 @@ public class SettingFragment extends Fragment {
         binding = FragmentSettingBinding.inflate(inflater, container, false);
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
         sweetAlertDialog = new SweetAlertDialog(requireActivity(), SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         sweetAlertDialog.setCancelable(false);
@@ -148,9 +154,25 @@ public class SettingFragment extends Fragment {
             };
             handler.postDelayed(runnable, 200);
 
+            builder.setMessage("Your subscription will be expired on " + getDate(MainActivity.currentUser.getVipExpiredTimestamp()))
+                    .setTitle("Expired VIP Subscription");
+
             binding.navHeader.tierBadge.setText("Status: VIP");
             binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_vip));
             binding.subscriptionTv.setText("Extend subscription");
+            binding.navHeader.tierBadge.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    binding.navHeader.tierBadge.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.navHeader.tierBadge.animate().scaleX(1f).scaleY(1f).setDuration(100);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
         } else {
             binding.navHeader.tierBadge.setText("Status: Standard");
             binding.navHeader.tierBadge.setBackground(getResources().getDrawable(R.drawable.custom_button_standard));
@@ -472,4 +494,11 @@ public class SettingFragment extends Fragment {
 //        AppCompatDelegate.setDefaultNightMode(nightModeFlag);
 //        getDelegate().applyDayNight();
 //    }
+
+    private String getDate(long time) {
+        Date date = new Date(time*1000L); // *1000 is to convert seconds to milliseconds
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy "); // the format of your date
+
+        return sdf.format(date);
+    }
 }
