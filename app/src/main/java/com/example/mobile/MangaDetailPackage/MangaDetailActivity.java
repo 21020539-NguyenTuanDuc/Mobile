@@ -165,6 +165,7 @@ public class MangaDetailActivity extends AppCompatActivity {
                                     }
 
                                     if (favoriteList.contains(manga.getId())) {
+                                        btnFav.setText("Favorited");
                                         Toast.makeText(MangaDetailActivity.this, "Truyện đã có trong danh sách yêu thích!", Toast.LENGTH_SHORT).show();
                                     } else {
                                         favoriteList.add(manga.getId());
@@ -179,6 +180,7 @@ public class MangaDetailActivity extends AppCompatActivity {
                                                     db.collection("Manga").document(manga.getId())
                                                             .update("likes", manga.getLikes() + 1)
                                                             .addOnSuccessListener(aVoid1 -> {
+                                                                btnFav.setText("Favorited");
                                                                 Toast.makeText(MangaDetailActivity.this, "Đã tăng thêm 1 lượt thích cho truyện!", Toast.LENGTH_SHORT).show();
                                                             })
                                                             .addOnFailureListener(e -> {

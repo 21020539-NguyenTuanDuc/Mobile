@@ -168,6 +168,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                                         db.collection("User").document(userId)
                                                 .update("favoriteList", favoriteList)
                                                 .addOnSuccessListener(aVoid -> {
+                                                    btnFav.setText("Deleted");
                                                     Toast.makeText(FavoriteDetailActivity.this, "Đã xóa khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
                                                     // Giảm 1 giá trị likes của truyện
                                                     db.collection("Manga").document(manga.getId())
@@ -183,6 +184,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                                                     Toast.makeText(FavoriteDetailActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
                                     } else {
+                                        btnFav.setText("Deleted");
                                         Toast.makeText(FavoriteDetailActivity.this, "Bạn đã xóa truyện khỏi danh sách yêu thích trước đó rồi!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
