@@ -126,35 +126,50 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
                 mAuth = FirebaseAuth.getInstance();
                 String userId = mAuth.getCurrentUser().getUid();
 
-                // Truy vấn thông tin userModel từ Firestore
-                db = FirebaseFirestore.getInstance();
-                DocumentReference userRef = db.collection("User").document(userId);
-                userRef.get().addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        userModel = documentSnapshot.toObject(UserModel.class);
-                        buttonPurchase.setText("Vip");
-                        buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFC0CB")));
-                        buttonPurchase.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // Handle purchase for Vip chapter
-                                showDialogToPurchase(userModel, chapter);
-                            }
-                        });
-                    } else {
-                        // Handle case when document does not exist
-                        Toast.makeText(itemView.getContext(), "Không thể tải thông tin người dùng. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(e -> {
-                    // Handle failure
-                });
+                // Kiểm tra xem người dùng đã mua chap này chưa
+                if (chapter.getUsers() != null && chapter.getUsers().contains(userId)) {
+                    buttonPurchase.setText("Paid");
+                    buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00FF00")));
+                    buttonPurchase.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Xử lý khi chap miễn phí được nhấn
+                            itemView.performClick();
+                        }
+                    });
+                } else {
+                    // Người dùng chưa mua chap này
+                    // Truy vấn thông tin userModel từ Firestore
+                    db = FirebaseFirestore.getInstance();
+                    DocumentReference userRef = db.collection("User").document(userId);
+                    userRef.get().addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            userModel = documentSnapshot.toObject(UserModel.class);
+                            buttonPurchase.setText("Vip");
+                            buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFC0CB"))); // Màu hồng
+                            buttonPurchase.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Xử lý việc mua chap
+                                    showDialogToPurchase(userModel, chapter);
+                                }
+                            });
+                        } else {
+                            // Xử lý khi không thể tải thông tin người dùng
+                            Toast.makeText(itemView.getContext(), "Không thể tải thông tin người dùng. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(e -> {
+                        // Xử lý khi có lỗi xảy ra trong quá trình truy vấn
+                    });
+                }
             } else {
+                // Nếu chap miễn phí
                 buttonPurchase.setText("Free");
-                buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#33AFE8")));
+                buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#33AFE8"))); // Màu xanh dương
                 buttonPurchase.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Handle free chapter
+                        // Xử lý khi chap miễn phí được nhấn
                         itemView.performClick();
                     }
                 });
@@ -215,6 +230,15 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
                             userList.add(userId);
                             chapter.setUsers(userList);
 
+                            buttonPurchase.setText("Paid");
+                            buttonPurchase.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00FF00")));
+                            buttonPurchase.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Xử lý khi chap miễn phí được nhấn
+                                    itemView.performClick();
+                                }
+                            });
                             // Cập nhật dữ liệu người dùng và chap lên Firestore
                             updateUserAndChapter(userRef, userModel, chapter);
                         }
