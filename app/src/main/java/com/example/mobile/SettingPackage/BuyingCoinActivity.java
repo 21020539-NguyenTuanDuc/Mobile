@@ -123,19 +123,23 @@ public class BuyingCoinActivity extends AppCompatActivity {
             Log.d("Amount", String.valueOf(total));
             String code = data.getString("return_code");
 
+//            Log.d("ZaloPayment", "This is code " + code);
+
             if (code.equals("1")) {
                 WriteBatch batch = FirebaseFirestore.getInstance().batch();
                 String token = data.getString("zp_trans_token");
+                Log.d("ZaloPayment", "This is token " + token);
                 ZaloPaySDK.getInstance().payOrder(BuyingCoinActivity.this, token, "demozpdk://app", new PayOrderListener() {
                     @Override
                     public void onPaymentSucceeded(String s, String s1, String s2) {
                         Log.d("ZaloPayment", "Payment complete " + total);
 
-                        String id = FirebaseFirestore.getInstance().collection("SubTransaction").document().getId();
+                        String id = FirebaseFirestore.getInstance().collection("CoinTransaction").document().getId();
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis() / 1000, 0);
                         String userID = MainActivity.currentUser.getId();
                         CoinTransactionModel transactionModel = new CoinTransactionModel(id, total, timestamp, coin, token, userID);
                         DocumentReference transactionRef = FirebaseFirestore.getInstance().collection("CoinTransaction").document(id);
+//                        System.out.println("adniqndioqwnfio tai sao lai ngu the");
                         batch.set(transactionRef, transactionModel);
 
                         FirebaseFirestore.getInstance().collection("User").document(userID)
@@ -151,7 +155,7 @@ public class BuyingCoinActivity extends AppCompatActivity {
                                     Log.d("ZaloPayment", "Add transaction and ticket to database failed");
                                 });
 
-                        Intent intent = new Intent(BuyingCoinActivity.this, SuccessPaymentActivity.class);
+                        Intent intent = new Intent(BuyingCoinActivity.this, SuccessPayment2Activity.class);
                         intent.putExtra("amount", total);
                         intent.putExtra("transactionID", id);
                         startActivity(intent);

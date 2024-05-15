@@ -107,7 +107,7 @@ public class BuyingSubActivity extends AppCompatActivity {
                     public void onPaymentSucceeded(String s, String s1, String s2) {
                         Log.d("ZaloPayment", "Payment complete " + NumberTextWatcherForThousand.trimCommaOfString(binding.totalPrice.getText().toString()));
 
-                        String id = FirebaseFirestore.getInstance().collection("SubTransaction").document().getId();
+                        String id = FirebaseFirestore.getInstance().collection("Transaction").document().getId();
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis() / 1000, 0);
                         long amount = Long.parseLong(NumberTextWatcherForThousand.trimCommaOfString(binding.totalPrice.getText().toString()));
                         String userID = MainActivity.currentUser.getId();

@@ -17,7 +17,9 @@ import androidx.fragment.app.Fragment;
 import com.example.mobile.Adapter.MangaAdapter;
 import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
 import com.example.mobile.Model.MangaModel;
+import com.example.mobile.Quiz.QuizActivity;
 import com.example.mobile.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,6 +34,8 @@ public class HomeFragment extends Fragment {
     private List<MangaModel> mangaList;
     private MangaAdapter mangaAdapter;
     private FirebaseFirestore db;
+
+    private FloatingActionButton minigameBtn;
 
     @Nullable
     @Override
@@ -63,6 +67,12 @@ public class HomeFragment extends Fragment {
                     HomeFragment.this.onItemClick(selectedManga.getId(), selectedManga.getImage(), selectedManga.getName());
                 }
             }
+        });
+
+        minigameBtn = view.findViewById(R.id.minigame_btn);
+        minigameBtn.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), QuizActivity.class);
+            startActivity(i);
         });
 
         return view;
