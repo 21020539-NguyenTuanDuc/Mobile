@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:fontFamily="@font/alegreysan"
-                android:text="Hoàn thành Minigame"
+                android:text="@string/minigame_complete"
                 android:textColor="@color/brown"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/philo_bold"
                     android:justificationMode="inter_word"
-                    android:text="Số câu trả lời đúng: "
+                    android:text="@string/number_right_answer"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/philo_bold"
                     android:justificationMode="inter_word"
-                    android:text="Thời gian còn lại: "
+                    android:text="@string/time_left"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/philo_bold"
                     android:justificationMode="inter_word"
-                    android:text="Tổng số xu nhận được: "
+                    android:text="@string/total_coin_receive"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/philo_bold"
                     android:justificationMode="inter_word"
-                    android:text="Tổng số xu hiện có: "
+                    android:text="@string/total_coin"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -159,7 +159,7 @@
                     android:id="@+id/button_complete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hoàn thành"
+                    android:text="@string/complete"
                     app:cornerRadius="10dp"/>
 
                 <com.google.android.material.button.MaterialButton
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="Đổi quà"
+                    android:text="@string/exchange_gift"
                     app:cornerRadius="10dp"/>
             </RelativeLayout>
 

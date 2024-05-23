@@ -208,7 +208,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="#29B6F6"
-            android:text="CHAPTER"
+            android:text="@string/chapter"
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp" />
 
@@ -221,7 +221,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="#FF9800"
-            android:text="READ"
+            android:text="@string/read"
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp" />
 
@@ -234,7 +234,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:backgroundTint="#E10909"
-            android:text="DELETE"
+            android:text="@string/delete"
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp"
             tools:ignore="TextContrastCheck" />

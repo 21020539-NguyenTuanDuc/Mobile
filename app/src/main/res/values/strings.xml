@@ -35,8 +35,6 @@
 
     <!--    Language -->
     <string name="vietnamese">🇻🇳 Vietnamese</string>
-    <string name="english">\ud83c\uddec\ud83c\udde7 English</string>
-    <string name="japanese">🇯🇵 Japanese</string>
     <string name="chinese">🇨🇳 Chinese</string>
     <string name="set_your_languageBT">Set your language</string>
     <string name="choose_your_language">Choose your language</string>
@@ -47,6 +45,67 @@
     <string name="privacy1">This Privacy Policy is meant to help you understand what information we collect, why we collect it, and how you can update, manage, export, and delete your information. \n This Privacy Policy applies to all of the services offered by Manga++ and its affiliates, including services offered on other sites, but excludes services that have separate privacy policies that do not incorporate this Privacy Policy. \n This Privacy Policy doesn’t apply to services that have separate privacy policies that do not incorporate this Privacy Policy.</string>
     <string name="privacy2">We collect information to provide better services to all our users — from figuring out basic stuff like which language you speak, to more complex things like which ads you’ll find most useful, the people who matter most to you online, or which YouTube videos you might like.\n Information you give us. For example, many of our services require you to sign up for a Manga++ Account. When you do, we’ll ask for personal information, like your name, email address, telephone number or credit card. If you want to take full advantage of the sharing features we offer, we might also ask you to create a publicly visible Manga++ Profile, which may include your name and photo.\n Information we get from your use of our services. We collect information about the services that you use and how you use them, like when you watch a video on YouTube, visit a website that uses our advertising services, or view and interact with our ads and content. This information includes:\n Device information: We collect device-specific information (such as your hardware model, operating system version, unique device identifiers, and mobile network information including phone number). Manga++ may associate your device identifiers or phone number with your Manga++ Account.</string>
     <string name="privacy3">Log information: When you use our services or view content provided by Manga++, we automatically collect and store certain information in server logs. This includes:\n Details of how you used our service, such as your search queries.\n Telephony log information like your phone number, calling-party number, forwarding numbers, time and date of calls, duration of calls, SMS routing information and types of calls.\n Internet protocol address.\n Device event information such as crashes, system activity, hardware settings, browser type, browser language, the date and time of your request and referral URL.\n Cookies that may uniquely identify your browser or your Manga++ Account.\n Location information: When you use Manga++ services, we may collect and process information about your actual location. We use various technologies to determine location, including IP address, GPS, and other sensors that may, for example, provide Manga++ with information on nearby devices, Wi-Fi access points and cell towers.</string>
+    <string name="new_subscription">New subscription</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="x">X</string>
+    <string name="insert_manga_name">Enter the manga name</string>
+    <string name="date_buying_coin">Date:</string>
+    <string name="price_buying_coin">Price:</string>
+    <string name="number_of_coins_buying_coin">Number of coins:</string>
+    <string name="enter_number_of_coins_buying_coin">Enter number of coins</string>
+    <string name="price_2_buying_coin">Price:</string>
+    <string name="discount_buying_coin">Discount:</string>
+    <string name="total_buying_coin">Total:</string>
+    <string name="note_discount_buying_coin">Payments over 100,000 VND will receive a 10% discount on purchase value</string>
+    <string name="zalopay_button">PAY WITH ZALOPAY</string>
+    <string name="price_per_day_buying_sub">Price per day</string>
+    <string name="vip_duration_buying_sub">VIP duration</string>
+    <string name="money_saved_buying_sub">Money saved (from buy per month)</string>
+    <string name="coin">Coin</string>
+    <string name="expired_date_buying_sub">Expired date</string>
+    <string name="total">Total</string>
+    <string name="home">Home</string>
+    <string name="previous">Previous</string>
+    <string name="chapter">Chapter</string>
+    <string name="next">Next</string>
+    <string name="read">READ</string>
+    <string name="delete">DELETE</string>
+    <string name="author">Author:</string>
+    <string name="status">Status:</string>
+    <string name="chapters">Chapters:</string>
+    <string name="likes">Likes:</string>
+    <string name="genres">Genres:</string>
+    <string name="favorite">FAVORITE</string>
+    <string name="standard_plan">Standard plan</string>
+    <string name="free">Free</string>
+    <string name="describe_free_plan">Access to most of the manga. \n With ads. \n There are some series that are not available and require coin to unlock. \n Does not get free coins daily.</string>
+    <string name="describe_vip_plan">Access to all manga. \n No ads. \n Get free coin daily.</string>
+    <string name="buy_vip">Get you VIP plan now:</string>
+    <string name="_30_days">30 days</string>
+    <string name="coin_30_days">1000 VND/day \n Get 10 coins instantly \n Get 3 coins daily</string>
+    <string name="_90_days">90 days</string>
+    <string name="coin_90_days">888 VND/day \n Get 15 coins instantly \n Get 4 coins daily</string>
+    <string name="_180_days">180 days</string>
+    <string name="coin_180_days">850 VND/day \n Get 40 coins instantly \n Get 5 coins daily</string>
+    <string name="_360_days">360 days</string>
+    <string name="coin_360_days">800 VND/day \n Get 100 coins instantly \n Get 6 coins daily</string>
+    <string name="payment_successful">Payment Successful!</string>
+    <string name="transaction_id">Transaction ID:</string>
+    <string name="amount_paid">Amount paid:</string>
+    <string name="paid_with_zalopay">Paid with ZaloPay</string>
+    <string name="to_home_screen">TO HOME SCREEN</string>
+    <string name="minigame_complete">Complete the Minigame</string>
+    <string name="number_right_answer">Correct answer number:</string>
+    <string name="time_left">Time remaining:</string>
+    <string name="total_coin_receive">Total coins received:</string>
+    <string name="total_coin">Tổng số xu hiện có:</string>
+    <string name="complete">Complete</string>
+    <string name="exchange_gift">Exchange gifts</string>
+    <string name="correct_ans">Câu trả lời chính xác</string>
+    <string name="correct_ans_is">The correct answer is: A duck with two wings spread out.</string>
+    <string name="english">\ud83c\uddec\ud83c\udde7 English</string>
+    <string name="japanese">🇯🇵 Japanese</string>
 
 
 </resources>

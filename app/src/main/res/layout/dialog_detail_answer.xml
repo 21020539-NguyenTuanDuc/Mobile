@@ -39,7 +39,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/alegreysan"
-                    android:text="Câu trả lời chính xác"
+                    android:text="@string/correct_ans"
                     android:textColor="@color/brown"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/philo_bold"
                 android:justificationMode="inter_word"
-                android:text="Đáp án đúng là: Một con vịt xòe ra 2 cái cánh."
+                android:text="@string/correct_ans_is"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
                 android:background="@drawable/bg_quiz_time"
                 android:fontFamily="@font/alegrey_bold"
                 android:gravity="center"
-                android:text="Hoàn thành"
+                android:text="@string/complete"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="8dp"
                 android:textColor="@color/white"

@@ -181,12 +181,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         profilePicture = uri;
                         sweetAlertDialog.dismiss();
+//                        if (sweetAlertDialog!=null) {
+//                            if (sweetAlertDialog.isShowing()) {
+//                                sweetAlertDialog.dismiss();
+//                            }
+//                        }
                         Log.d("UI", "Get profile picture");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         sweetAlertDialog.dismiss();
+//                        if (sweetAlertDialog!=null) {
+//                            if (sweetAlertDialog.isShowing()) {
+//                                sweetAlertDialog.dismiss();
+//                            }
+//                        }
                         Log.d("UI", e.getMessage());
                     }
                 });

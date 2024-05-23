@@ -60,7 +60,7 @@
                 android:layout_marginEnd="100dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FF9800"
-                android:text="Home"
+                android:text="@string/home"
                 android:textColor="#FFFFFF"
                 app:cornerRadius="10dp" />
     </LinearLayout>

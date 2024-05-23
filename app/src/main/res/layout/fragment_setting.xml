@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_grey"
     tools:context=".MainActivityPackage.SettingFragment">
 
     <ScrollView
@@ -23,7 +23,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:text="@string/manage"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnBackground"
+                android:drawableTint="?attr/colorOnBackground"
                 android:layout_marginStart="30dp"
                 android:textSize="20sp"
                 android:layout_height="wrap_content"
@@ -42,11 +43,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="bottom"
-                    android:text="New subscription"
+                    android:text="@string/new_subscription"
                     android:textSize="16sp"
                     android:paddingVertical="5dp"
                     android:paddingHorizontal="10dp"
-                    android:textColor="@drawable/text_color"
+                    android:textColor="?attr/colorOnBackground"
                     android:textStyle="bold"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/vip_icon"/>
@@ -60,7 +61,7 @@
                     android:text="Buy more coin"
                     android:textSize="16sp"
                     android:paddingVertical="5dp"
-                    android:textColor="@drawable/text_color"
+                    android:textColor="?attr/colorOnBackground"
                     android:textStyle="bold"
                     android:paddingHorizontal="10dp"
                     android:layout_alignParentRight="true"
@@ -80,13 +81,14 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/baseline_settings_24" />
+                    android:src="@drawable/baseline_settings_24"
+                    app:tint="?attr/colorOnBackground" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:text="@string/setting"
-                    android:textColor="@color/black"
                     android:layout_marginStart="5dp"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:layout_height="wrap_content" />
 
@@ -135,40 +137,40 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:id="@+id/notification_icon"
-                        android:src="@drawable/notification_icon"
-                        android:background="@drawable/round_back_blue"
-                        android:padding="12dp"
-                        android:layout_height="40dp" />
+<!--                    <ImageView-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:id="@+id/notification_icon"-->
+<!--                        android:src="@drawable/notification_icon"-->
+<!--                        android:background="@drawable/round_back_blue"-->
+<!--                        android:padding="12dp"-->
+<!--                        android:layout_height="40dp" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/notification"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_toEndOf="@id/notification_icon"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:text="@string/notification"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:layout_toEndOf="@id/notification_icon"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/notification_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:switchMinWidth="50dp"
-                        android:theme="@style/notificationSwitch"
-                        android:layout_height="wrap_content" />
+<!--                    <androidx.appcompat.widget.SwitchCompat-->
+<!--                        android:id="@+id/notification_switch"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:switchMinWidth="50dp"-->
+<!--                        android:theme="@style/notificationSwitch"-->
+<!--                        android:layout_height="wrap_content" />-->
 
-                </RelativeLayout>
+<!--                </RelativeLayout>-->
 
                 <RelativeLayout
                     android:id="@+id/language_button"
@@ -217,12 +219,13 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/baseline_about_24" />
+                    android:src="@drawable/baseline_about_24"
+                    app:tint="?attr/colorOnBackground" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:text="@string/aboutUs"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_marginStart="5dp"
                     android:textSize="20sp"
                     android:layout_height="wrap_content" />
@@ -324,7 +327,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Facebook"
+                        android:text="@string/facebook"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_toEndOf="@id/facebook_icon"
@@ -358,7 +361,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Instagram"
+                        android:text="@string/instagram"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_toEndOf="@id/instagram_icon"
@@ -392,7 +395,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="X"
+                        android:text="@string/x"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_toEndOf="@id/twitter_icon"
@@ -420,12 +423,13 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/baseline_dangerous_24" />
+                    android:src="@drawable/baseline_dangerous_24"
+                    app:tint="?attr/colorOnBackground" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:text="@string/dangerZone"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_marginStart="5dp"
                     android:textSize="20sp"
                     android:layout_height="wrap_content" />

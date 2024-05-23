@@ -243,11 +243,11 @@ public class SettingFragment extends Fragment {
                 editor.apply();
 
                 // Recreate the fragment manager to apply the changes immediately
-                if (getActivity() != null) {
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_layout, SettingFragment.this);
-                    transaction.commit();
-                }
+//                if (getActivity() != null) {
+//                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.frame_layout, SettingFragment.this);
+//                    transaction.commit();
+//                }
             }
         });
 

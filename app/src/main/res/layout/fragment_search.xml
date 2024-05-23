@@ -22,7 +22,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="80dp"
-            android:hint="Nhập tên truyện"
+            android:hint="@string/insert_manga_name"
             android:textColorHint="#B3ADAD"
             android:gravity="center"
             android:textColor="#fff"/>

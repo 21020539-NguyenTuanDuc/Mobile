@@ -1,11 +1,11 @@
 package com.example.mobile.SettingPackage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.mobile.MainActivity;
-//import com.example.mobile.NavigationOpeningActivity;
 import com.example.mobile.databinding.ActivityLanguageBinding;
 import com.zeugmasolutions.localehelper.LocaleAwareCompatActivity;
 import com.zeugmasolutions.localehelper.Locales;
@@ -21,16 +21,33 @@ public class LanguageActivity extends LocaleAwareCompatActivity {
     public static String chinese = "Chinese";
     Locale locale;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLanguageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String checkUser = getIntent().getStringExtra("checkUser");
-        if (checkUser != null && checkUser.contains("newUser")) {
-            binding.openingTextView.setVisibility(View.VISIBLE);
-        } else binding.openingTextView.setVisibility(View.GONE);
+        sharedPref = getSharedPreferences("LanguagePref", MODE_PRIVATE);
+        editor = sharedPref.edit();
+        current_language = sharedPref.getString("current_language", english);
+
+        if (current_language.equals(vietnamese)) {
+            binding.VNRadio.setChecked(true);
+        } else if (current_language.equals(english)) {
+            binding.ENRadio.setChecked(true);
+        } else if (current_language.equals(japanese)) {
+            binding.JPRadio.setChecked(true);
+        } else if (current_language.equals(chinese)) {
+            binding.CNRadio.setChecked(true);
+        }
+
+//        String checkUser = getIntent().getStringExtra("checkUser");
+//        if (checkUser != null && checkUser.contains("newUser")) {
+//            binding.openingTextView.setVisibility(View.VISIBLE);
+//        } else binding.openingTextView.setVisibility(View.GONE);
 
         binding.setLanguageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,34 +66,12 @@ public class LanguageActivity extends LocaleAwareCompatActivity {
 //                    intent.putExtra("checkUser", "newUser");
 //                    startActivity(intent);
 //                } else {
-                    binding.openingTextView.setVisibility(View.GONE);
+//                    binding.openingTextView.setVisibility(View.GONE);
                     startActivity(new Intent(LanguageActivity.this, MainActivity.class).putExtra("FragmentID", "SettingFragment"));
 //                }
             }
         });
 
-        locale = getResources().getConfiguration().locale;
-
-        if (locale.getLanguage().equals(new Locale("en").getLanguage())) {
-            current_language = english;
-        } else if (locale.getLanguage().equals(new Locale("vi").getLanguage())) {
-            current_language = vietnamese;
-        } else if (locale.getLanguage().equals(new Locale("jp").getLanguage())) {
-            current_language = japanese;
-        } else if (locale.getLanguage().equals(new Locale("zh").getLanguage())) {
-            current_language = chinese;
-        }
-
-
-        if (current_language.equals(vietnamese)) {
-            binding.VNRadio.setChecked(true);
-        } else if (current_language.equals(english)) {
-            binding.ENRadio.setChecked(true);
-        } else if (current_language.equals(japanese)) {
-            binding.JPRadio.setChecked(true);
-        } else if (current_language.equals(chinese)) {
-            binding.CNRadio.setChecked(true);
-        }
     }
 
     private void setLanguageApp() {
@@ -94,6 +89,8 @@ public class LanguageActivity extends LocaleAwareCompatActivity {
             current_language = chinese;
             locale = Locale.CHINA;
         }
+        editor.putString("current_language", current_language);
+        editor.apply();
         this.updateLocale(locale);
     }
 

@@ -30,7 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date:"
+                    android:text="@string/date_buying_coin"
                     android:textSize="20sp" />
 
                 <TextView
@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price:"
+                    android:text="@string/price_buying_coin"
                     android:textSize="20sp" />
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Number of coins:"
+                    android:text="@string/number_of_coins_buying_coin"
                     android:textSize="20sp" />
 
                 <EditText
@@ -90,7 +90,7 @@
                     android:layout_centerVertical="true"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:hint="Enter number of coins"
+                    android:hint="@string/enter_number_of_coins_buying_coin"
                     android:inputType="numberPassword"
                     android:textSize="20sp" />
             </RelativeLayout>
@@ -103,7 +103,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price:"
+                    android:text="@string/price_2_buying_coin"
                     android:textSize="20sp" />
 
                 <TextView
@@ -128,7 +128,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Discount:"
+                    android:text="@string/discount_buying_coin"
                     android:textSize="20sp" />
 
                 <TextView
@@ -158,7 +158,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total:"
+                    android:text="@string/total_buying_coin"
                     android:textSize="20sp" />
 
                 <TextView
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
-                android:text="Thanh toán trên 100,000 vnđ sẽ được giảm 10% giá trị đơn mua"
+                android:text="@string/note_discount_buying_coin"
                 android:textStyle="bold|italic"
                 android:layout_height="wrap_content" />
 
@@ -203,6 +203,6 @@
         android:fontFamily="@font/alegreysan"
         android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/main_blue_color"
-        android:text="PAY WITH ZALOPAY" />
+        android:text="@string/zalopay_button" />
 
 </LinearLayout>
