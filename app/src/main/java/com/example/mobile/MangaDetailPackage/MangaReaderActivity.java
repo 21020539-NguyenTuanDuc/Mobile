@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +40,7 @@ import java.util.List;
 public class MangaReaderActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
+    private FirebaseAuth mAuth;
     private ImageButton imageButton;
     private ScrollView scrollView;
     private ImageView imageManga;
@@ -118,6 +121,8 @@ public class MangaReaderActivity extends AppCompatActivity {
     }
 
     private void loadChapterImage(int index) {
+        mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
         if (index < 0 || index >= chapList.size()) {
             return;
         }
@@ -134,11 +139,30 @@ public class MangaReaderActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             ChapterModel chapter = document.toObject(ChapterModel.class);
-                            if (chapter != null && chapter.getList() != null) {
-                                List<String> imageList = chapter.getList();
-                                updateRecyclerView(imageList);
+                            if (chapter != null && chapter.getPrice() > 0) {
+                                // Nếu chapter có giá tiền
+                                List<String> users = chapter.getUsers();
+                                if (users != null && users.contains(userId)) {
+                                    // Nếu danh sách users chứa id của currentUser
+                                    List<String> imageList = chapter.getList();
+                                    updateRecyclerView(imageList);
+                                } else {
+                                    // Người dùng không có quyền đọc chap này
+                                    // Hiển thị thông báo hoặc thực hiện hành động phù hợp
+                                    Toast.makeText(MangaReaderActivity.this, "Bạn không có quyền đọc chap này, vui lòng chuyển sang giao diện Chapter để mua chap!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+                                    intent.putExtra("manga", manga);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             } else {
-                                Log.e(TAG, "Chapter or image list is null");
+                                // Nếu chapter không có giá tiền hoặc có giá là 0
+                                if (chapter != null && chapter.getList() != null) {
+                                    List<String> imageList = chapter.getList();
+                                    updateRecyclerView(imageList);
+                                } else {
+                                    Log.e(TAG, "Chapter or image list is null");
+                                }
                             }
                         } else {
                             Log.e(TAG, "No such document");
