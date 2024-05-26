@@ -3,6 +3,7 @@ package com.example.mobile.MangaDetailPackage;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,10 +24,12 @@ import com.bumptech.glide.request.target.Target;
 import com.example.mobile.Adapter.PageAdapter;
 import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
+import com.example.mobile.Model.UserModel;
 import com.example.mobile.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -148,12 +152,74 @@ public class MangaReaderActivity extends AppCompatActivity {
                                     updateRecyclerView(imageList);
                                 } else {
                                     // Người dùng không có quyền đọc chap này
-                                    // Hiển thị thông báo hoặc thực hiện hành động phù hợp
-                                    Toast.makeText(MangaReaderActivity.this, "Bạn không có quyền đọc chap này, vui lòng chuyển sang giao diện Chapter để mua chap!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
-                                    intent.putExtra("manga", manga);
-                                    startActivity(intent);
-                                    finish();
+                                    // Truy vấn thông tin userModel từ Firestore
+                                    DocumentReference userRef = FirebaseFirestore.getInstance().collection("User").document(userId);
+                                    userRef.get().addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+                                            if (userModel != null) {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(MangaReaderActivity.this);
+                                                builder.setTitle("Xác nhận mua");
+                                                builder.setMessage("Bạn đang có " + userModel.getCoin() + " coin. Bạn có muốn mua chap này với giá " + chapter.getPrice() + " coin không?");
+                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        purchaseChapter(userModel, chapter, new PurchaseCallback() {
+                                                            @Override
+                                                            public void onSuccess() {
+                                                                // Cập nhật giao diện sau khi mua thành công
+                                                                Toast.makeText(MangaReaderActivity.this, "Giao dịch thành công! Chúc bạn có những giờ phút giải trí tuyệt vời với Manga++!", Toast.LENGTH_SHORT).show();
+                                                                List<String> imageList = chapter.getList();
+                                                                updateRecyclerView(imageList);
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure() {
+                                                                // Xử lý khi việc mua chap thất bại
+                                                                Toast.makeText(MangaReaderActivity.this, "Giao dịch thất bại! Vui lòng nạp thêm coin để mua chap!", Toast.LENGTH_SHORT).show();
+                                                                Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+                                                                intent.putExtra("manga", manga);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Chuyển người dùng đến ChapterActivity
+                                                        Toast.makeText(MangaReaderActivity.this, "Bạn không có quyền đọc chap này, vui lòng chuyển sang giao diện Chapter và nhấn vào nút 'VIP' để mua chap!", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+                                                        intent.putExtra("manga", manga);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                });
+
+                                                // Tạo dialog và thiết lập không thể hủy bằng cách nhấn bên ngoài
+                                                AlertDialog dialog = builder.create();
+                                                dialog.setCancelable(false); // Ngăn người dùng nhấn bên ngoài dialog để đóng nó
+
+                                                // Thiết lập OnCancelListener để xử lý khi dialog bị hủy
+                                                dialog.setOnCancelListener(dialogInterface -> {
+                                                    Toast.makeText(MangaReaderActivity.this, "Bạn không có quyền đọc chap này, vui lòng chuyển sang giao diện Chapter và nhấn vào nút 'VIP' để mua chap!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(MangaReaderActivity.this, ChapterActivity.class);
+                                                    intent.putExtra("manga", manga);
+                                                    startActivity(intent);
+                                                    finish();
+                                                });
+
+                                                dialog.show();
+                                            } else {
+                                                Toast.makeText(MangaReaderActivity.this, "Không thể tải thông tin người dùng. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(MangaReaderActivity.this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(e -> {
+                                        Toast.makeText(MangaReaderActivity.this, "Đã xảy ra lỗi khi truy vấn dữ liệu", Toast.LENGTH_SHORT).show();
+                                    });
                                 }
                             } else {
                                 // Nếu chapter không có giá tiền hoặc có giá là 0
@@ -171,6 +237,75 @@ public class MangaReaderActivity extends AppCompatActivity {
                         Log.e(TAG, "get failed with ", task.getException());
                     }
                 });
+    }
+
+    // Interface PurchaseCallback để xử lý kết quả mua chap
+    private interface PurchaseCallback {
+        void onSuccess();
+
+        void onFailure();
+    }
+
+    private void purchaseChapter(UserModel userModel, ChapterModel chapter, PurchaseCallback callback) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null && chapter != null && chapter.getId() != null) {
+            String userId = currentUser.getUid();
+
+            // Lấy thông tin user từ Firestore
+            DocumentReference userRef = FirebaseFirestore.getInstance().collection("User").document(userId);
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    long userCoins = userModel.getCoin();
+                    long chapterPrice = chapter.getPrice();
+                    if (userCoins >= chapterPrice) {
+                        userModel.setCoin(userCoins - chapterPrice);
+
+                        // Truy vấn dữ liệu chap từ Firestore
+                        DocumentReference chapterRef = FirebaseFirestore.getInstance().collection("Chapter").document(chapter.getId());
+                        chapterRef.get().addOnSuccessListener(chapterDocumentSnapshot -> {
+                            if (chapterDocumentSnapshot.exists()) {
+                                ChapterModel existingChapter = chapterDocumentSnapshot.toObject(ChapterModel.class);
+                                if (existingChapter != null) {
+                                    List<String> userList = existingChapter.getUsers();
+                                    if (userList == null) {
+                                        userList = new ArrayList<>();
+                                    }
+                                    userList.add(userId); // Sử dụng userId từ FirebaseAuth
+                                    existingChapter.setUsers(userList);
+
+                                    List<String> finalUserList = userList;
+                                    userRef.set(userModel).addOnSuccessListener(aVoid -> {
+                                        chapterRef.update("users", finalUserList).addOnSuccessListener(aVoid1 -> {
+                                            callback.onSuccess();
+                                        }).addOnFailureListener(e -> {
+                                            callback.onFailure();
+                                        });
+                                    }).addOnFailureListener(e -> {
+                                        callback.onFailure();
+                                    });
+                                } else {
+                                    callback.onFailure();
+                                }
+                            } else {
+                                callback.onFailure();
+                            }
+                        }).addOnFailureListener(e -> {
+                            callback.onFailure();
+                        });
+                    } else {
+                        callback.onFailure();
+                    }
+                } else {
+                    callback.onFailure();
+                }
+            }).addOnFailureListener(e -> {
+                callback.onFailure();
+            });
+        } else {
+            callback.onFailure();
+        }
     }
 
     private void updateRecyclerView(List<String> imageList) {
