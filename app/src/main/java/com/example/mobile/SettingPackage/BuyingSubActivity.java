@@ -118,11 +118,13 @@ public class BuyingSubActivity extends AppCompatActivity {
                         long currentTimestamp = System.currentTimeMillis();
                         long durationMillis = TimeUnit.DAYS.toMillis(duration);
                         long futureTimestamp = currentTimestamp + durationMillis;
-                        long updatedVipExpiredTimestamp = futureTimestamp / 1000;
+                        long updatedVipExpiredTimestamp;
 
-                        if (MainActivity.currentUser.getVipExpiredTimestamp() != 1 && MainActivity.currentUser.getVipExpiredTimestamp() < System.currentTimeMillis() / 1000) {
+                        if (MainActivity.currentUser.getVipExpiredTimestamp() < currentTimestamp / 1000) {
+                            updatedVipExpiredTimestamp = futureTimestamp / 1000;
+                        } else {
                             long currentVipExpiredTimestamp = MainActivity.currentUser.getVipExpiredTimestamp();
-                            updatedVipExpiredTimestamp = currentTimestamp + durationMillis / 1000;
+                            updatedVipExpiredTimestamp = currentVipExpiredTimestamp + durationMillis / 1000;
                         }
 
                         FirebaseFirestore.getInstance().collection("User").document(userID)
