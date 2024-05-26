@@ -56,6 +56,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
 
 
     implementation("com.google.android.gms:play-services-auth:20.7.0")
@@ -64,7 +65,6 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.github.f0ris.sweetalert:library:1.6.2")
-    implementation ("com.github.bumptech.glide:glide:4.10.0")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
 
     //    zalo

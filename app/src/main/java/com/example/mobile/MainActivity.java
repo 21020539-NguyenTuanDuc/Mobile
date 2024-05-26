@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobile.MainActivityPackage.FavoriteFragment;
 import com.example.mobile.MainActivityPackage.HistoryFragment;
@@ -21,6 +22,7 @@ import com.example.mobile.MainActivityPackage.HomeFragment;
 import com.example.mobile.MainActivityPackage.SearchFragment;
 import com.example.mobile.MainActivityPackage.SettingFragment;
 import com.example.mobile.Model.UserModel;
+import com.example.mobile.Model.UserViewModel;
 import com.example.mobile.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +38,7 @@ import java.util.Objects;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity {
+    public static UserViewModel userViewModel;
     public static UserModel currentUser;
     private String FragmentID = "HomeFragment";
     public static Uri profilePicture = null;
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(binding.getRoot());
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.setCancelable(false);
@@ -161,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                             currentUser = documentSnapshot.toObject(UserModel.class);
                             assert currentUser != null;
                             currentUser.setId(Uid);
+                            userViewModel.setCurrentUser(currentUser); // Update the currentUser in ViewModel
                             getProfilePicture();
                         }
                     })

@@ -22,6 +22,12 @@ import com.example.mobile.MainActivity;
 import com.example.mobile.Model.ChapterModel;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.R;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,6 +61,9 @@ public class MangaDetailActivity extends AppCompatActivity {
     MangaModel manga;
     ChapterModel chapter;
 
+    private AdRequest adRequest;
+    private InterstitialAd mInterstitialAd;
+
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,22 @@ public class MangaDetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
+        adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(MangaDetailActivity.this, "ca-app-pub-3940256099942544/1033173712", adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Log.d("InterAd", loadAdError.toString());
+                mInterstitialAd = null;
+            }
+
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                mInterstitialAd = interstitialAd;
+                Log.i("InterAd", "onAdLoaded");
+            }
+        });
 
         setContentView(R.layout.activity_manga_detail);
 
@@ -250,7 +275,31 @@ public class MangaDetailActivity extends AppCompatActivity {
                                                                     intent.putExtra("currentChap", manga.getCurrentChap());
                                                                     intent.putExtra("manga", manga);
                                                                     intent.putExtra("chapter", chapter);
-                                                                    startActivity(intent);
+
+//                                                                  AD
+                                                                    int randomAd = (int) (Math.random() * 10);
+                                                                    if (mInterstitialAd != null && randomAd <= 5 && MainActivity.currentUser.getVipExpiredTimestamp() < System.currentTimeMillis() / 1000) {
+                                                                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                                                                            @Override
+                                                                            public void onAdDismissedFullScreenContent() {
+                                                                                startActivity(intent);
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                                                                                Log.d(TAG, adError.getMessage());
+                                                                                startActivity(intent);
+                                                                            }
+                                                                        });
+                                                                        mInterstitialAd.show(MangaDetailActivity.this);
+                                                                    } else {
+                                                                        Log.d(TAG, "The interstitial wasn't loaded yet.");
+                                                                        startActivity(intent);
+                                                                    }
+                                                                    // AD
+
+
+
                                                                 } else {
                                                                     // Xử lý trường hợp dữ liệu không hợp lệ
                                                                     Toast.makeText(MangaDetailActivity.this, "Dữ liệu chapList không hợp lệ", Toast.LENGTH_SHORT).show();

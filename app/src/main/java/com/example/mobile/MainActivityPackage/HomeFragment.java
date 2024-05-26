@@ -15,10 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobile.Adapter.MangaAdapter;
+import com.example.mobile.MainActivity;
 import com.example.mobile.MangaDetailPackage.MangaDetailActivity;
 import com.example.mobile.Model.MangaModel;
 import com.example.mobile.Quiz.QuizActivity;
 import com.example.mobile.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,6 +39,8 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db;
 
     private FloatingActionButton minigameBtn;
+    private AdRequest adRequest;
+    private AdView adView;
 
     @Nullable
     @Override
@@ -47,6 +52,21 @@ public class HomeFragment extends Fragment {
         mangaList = new ArrayList<>();
         mangaAdapter = new MangaAdapter(getActivity(), this); // Pass the fragment reference
         gridView.setAdapter(mangaAdapter);
+
+        adView = view.findViewById(R.id.adView);
+
+        MainActivity.userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
+            if(currentUser == null) {
+                adView.setVisibility(View.GONE);
+            } else {
+                if(currentUser.getVipExpiredTimestamp() < System.currentTimeMillis() / 1000) {
+                    adRequest = new AdRequest.Builder().build();
+                    adView.loadAd(adRequest);
+                } else {
+                    adView.setVisibility(View.GONE);
+                }
+            }
+        });
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
