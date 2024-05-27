@@ -470,7 +470,6 @@ public class QuizActivity extends AppCompatActivity {
         TextView textViewRemainingTime = (TextView) dialog.findViewById(R.id.remainingTime);
         TextView textViewTimeRemained = (TextView) dialog.findViewById(R.id.remaining_time);
         MaterialButton buttonComplete = (MaterialButton) dialog.findViewById(R.id.button_complete);
-        MaterialButton buttonChangeGift = (MaterialButton) dialog.findViewById(R.id.button_change_gift);
 
         textViewCountCorrectAnswer.setText(
                 Integer.toString(countCorrectAnswer) + "/" + Integer.toString(quizAdapter.quizModelList.size())
@@ -494,14 +493,6 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-//        buttonChangeGift.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                countCorrectAnswer = 0;
-//                Intent intent = new Intent(QuizActivity.this, GiftActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         dialog.show();
     }

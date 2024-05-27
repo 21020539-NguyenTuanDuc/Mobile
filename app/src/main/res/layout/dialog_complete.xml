@@ -153,6 +153,7 @@
 
             <RelativeLayout
                 android:layout_marginTop="36dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
                 <com.google.android.material.button.MaterialButton
@@ -160,14 +161,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/complete"
-                    app:cornerRadius="10dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_change_gift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="@string/exchange_gift"
                     app:cornerRadius="10dp"/>
             </RelativeLayout>
 
